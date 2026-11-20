@@ -47,7 +47,6 @@
     .evolve-pulse {
       animation: evolve-glow 1.4s ease-in-out infinite;
     }
-    /* 第4週模擬賽提詞機專用標記與字體控制 */
     .pause-mark {
       display: inline-block;
       margin: 0 3px;
@@ -75,7 +74,6 @@
       font-size: 1.42rem !important;
       line-height: 2.55 !important;
     }
-    /* 詞彙寶可夢圖鑑 3D 翻牌效果 */
     .vocab-flip-card {
       perspective: 1100px;
       min-height: 268px;
@@ -121,14 +119,13 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-  <!-- 預載 HTML5 <audio> 標籤（支援預設相對路徑與本機上傳 Blob URL 無縫切換） -->
+  <!-- 預載 HTML5 <audio> 標籤 -->
   <audio id="audio-01" preload="metadata" src="audio/01.mp3"></audio>
   <audio id="audio-06" preload="metadata" src="audio/06.mp3"></audio>
 
   <!-- 頂部寶可夢訓練家導覽列 -->
   <header class="bg-gradient-to-r from-red-600 via-red-600 to-rose-600 text-white border-b-4 border-slate-900 shadow-md">
     <div class="max-w-6xl mx-auto px-3 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
-      <!-- 品牌與標題 -->
       <div class="flex items-center gap-3">
         <div class="w-11 h-11 rounded-full bg-white border-4 border-slate-900 flex items-center justify-center relative overflow-hidden shrink-0 shadow">
           <div class="absolute top-0 left-0 right-0 h-1/2 bg-red-600 border-b-2 border-slate-900"></div>
@@ -143,9 +140,7 @@
         </div>
       </div>
 
-      <!-- 右側功能列：XP、徽章盒、音檔上傳、BGM -->
       <div class="flex flex-wrap items-center gap-2">
-        <!-- XP 經驗值條 -->
         <div class="bg-slate-900/90 px-3 py-1.5 rounded-2xl border-2 border-yellow-400 flex items-center gap-2">
           <span class="text-yellow-300 font-black text-xs">⚡ <span id="xpCount">0</span> XP</span>
           <div class="w-16 sm:w-20 h-2.5 bg-slate-700 rounded-full overflow-hidden">
@@ -153,7 +148,6 @@
           </div>
         </div>
 
-        <!-- 四大徽章顯示 -->
         <div class="bg-white/95 text-slate-900 px-2.5 py-1 rounded-2xl border-2 border-slate-900 flex items-center gap-1.5 text-xs font-black" title="完成各館挑戰可解鎖徽章">
           <span id="badge-01" class="opacity-30 grayscale transition-all" title="健康守護徽章 (第01篇)">❤️</span>
           <span id="badge-06" class="opacity-30 grayscale transition-all" title="苦甘美食徽章 (第06篇)">🥒</span>
@@ -161,18 +155,15 @@
           <span id="badge-game" class="opacity-30 grayscale transition-all" title="遊戲大師徽章 (聽音闖關)">🎮</span>
         </div>
 
-        <!-- 載入本機 .m4a / .mp3 音檔 -->
         <label class="bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black text-xs sm:text-sm px-3 py-2 rounded-xl cursor-pointer poke-btn flex items-center gap-1.5">
           <span>📂 載入完整音檔 (.m4a)</span>
           <input id="audioUploadInput" type="file" accept="audio/*" multiple class="hidden" />
         </label>
 
-        <!-- 重新自動偵測停頓 -->
         <button id="reDetectBtn" onclick="reRunAutoDetect()" class="hidden bg-sky-300 hover:bg-sky-200 text-slate-950 font-black text-xs px-2.5 py-2 rounded-xl poke-btn" title="依據目前載入音檔重新執行兩階段全局 DP 切割">
           ⚡ 重算切點
         </button>
 
-        <!-- BGM 主題與開關 -->
         <div class="flex items-center bg-slate-900 rounded-xl border-2 border-slate-950 overflow-hidden">
           <select id="bgmThemeSelect" onchange="SoundFX.changeTheme(this.value)" class="bg-slate-900 text-yellow-300 text-xs font-black px-2 py-2 outline-none cursor-pointer">
             <option value="pallet">🎵 真新鎮冒險</option>
@@ -205,7 +196,7 @@
       </div>
     </section>
 
-    <!-- 2. 互動式全局 DP 波形驗證＆直接拖曳調整條（載入音檔後自動顯示） -->
+    <!-- 2. 互動式全局 DP 波形驗證＆直接拖曳調整條 -->
     <section id="waveformEditorSection" class="hidden bg-slate-950 text-white rounded-3xl border-4 border-slate-900 p-4 shadow-xl space-y-3">
       <div class="flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2 flex-wrap">
@@ -222,18 +213,15 @@
         </div>
       </div>
 
-      <!-- 畫布容器 -->
       <div class="relative w-full h-32 bg-slate-900 rounded-2xl border-2 border-slate-700 overflow-hidden select-none">
         <canvas id="waveformCanvas" class="w-full h-full block cursor-ew-resize"></canvas>
       </div>
 
-      <!-- 水平捲動軸 -->
       <div class="flex items-center gap-2">
         <span class="text-[11px] text-slate-400 font-bold shrink-0">視窗捲動：</span>
         <input id="waveScrollRange" type="range" min="0" max="0" step="0.05" value="0" oninput="onWaveScrollChange(this.value)" class="w-full accent-yellow-400 cursor-pointer" />
       </div>
 
-      <!-- 波形試聽與連動控制列 -->
       <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-800 text-xs">
         <div class="flex flex-wrap items-center gap-1.5">
           <button onclick="stepWaveSelection(-1)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 font-bold">◀ 上一項</button>
@@ -336,7 +324,6 @@
 
     <!-- ==================== 模式三：4週冠軍集訓營 ==================== -->
     <section id="view-coach" class="hidden space-y-4">
-      <!-- 教練總覽與評審三大指標 -->
       <div class="poke-card p-4 sm:p-5 bg-gradient-to-br from-amber-50 via-white to-red-50 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -345,7 +332,6 @@
             <p class="text-xs sm:text-sm text-slate-600 font-bold mt-0.5">核心三大要訣：字音咬正（45%）＋ 情感對比做出來（45%）＋ 台風穩健（10%）</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
-            <!-- 自主練習 vs 教練大人裁判模式切換 -->
             <div class="inline-flex bg-slate-200 p-1 rounded-2xl border-2 border-slate-900">
               <button id="coachRoleStudentBtn" onclick="toggleCoachRefereeMode(false)" class="px-3 py-1.5 rounded-xl text-xs font-black bg-red-600 text-white transition-all">
                 👦 小朋友自主練習
@@ -360,7 +346,6 @@
           </div>
         </div>
 
-        <!-- 大人陪練裁判模式啟動提示橫幅 -->
         <div id="coachModeInfoBanner" class="hidden bg-purple-100 border-2 border-purple-700 rounded-2xl p-3.5 flex flex-wrap items-center gap-3">
           <span class="bg-purple-700 text-white text-xs font-black px-3 py-1 rounded-full shrink-0">🎧 大人語音裁判已啟動</span>
           <p class="text-xs sm:text-sm font-bold text-purple-950 leading-relaxed">
@@ -368,13 +353,11 @@
           </p>
         </div>
 
-        <!-- 念出靈魂的三個核心感受 -->
         <div class="space-y-2">
           <div class="text-xs font-black text-purple-800">💖 朗讀前先懂這篇文章的心跳——念出靈魂的三個核心感受：</div>
           <div id="coachCoreThemesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-2.5"></div>
         </div>
 
-        <!-- 評審在聽什麼（三大核心） -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div class="bg-white p-3.5 rounded-2xl border-2 border-slate-800">
             <div class="flex items-center justify-between font-black text-sm text-red-700">
@@ -405,12 +388,10 @@
           </div>
         </div>
 
-        <!-- 教練叮嚀小四生練習口訣 -->
         <div class="bg-slate-900 text-yellow-300 px-4 py-3 rounded-2xl border-2 border-yellow-400 text-center font-black text-sm sm:text-base tracking-wide">
           📜 教練獨家朗讀口訣：「字咬正、氣要長，該痛就要哀、該笑就開朗，最後莫破病，笑咪咪看裁判！」
         </div>
 
-        <!-- 4 週切換按鈕 -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
           <button id="week-btn-1" onclick="switchCoachWeek(1)" class="poke-btn py-2.5 px-3 rounded-xl font-black text-xs sm:text-sm bg-red-600 text-white">
             第 1 週：字音入聲疊字
@@ -427,48 +408,102 @@
         </div>
       </div>
 
-      <!-- 動態週次訓練內容容器 -->
       <div id="coachWeekContainer" class="space-y-4"></div>
     </section>
 
-    <!-- ==================== 模式四：寶可夢聽音遊戲（8大關卡） ==================== -->
+    <!-- ==================== 模式四：寶可夢聽音遊戲（8大關卡 × 20+題 × 關卡進度 × 排行榜） ==================== -->
     <section id="view-game" class="hidden space-y-4">
-      <div class="poke-card p-4 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 space-y-3">
-        <div class="flex flex-wrap items-center justify-between gap-2">
+      <!-- 挑戰者資料列＆總進度儀表板 -->
+      <div class="poke-card p-4 sm:p-5 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 space-y-3.5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 class="text-base sm:text-lg font-black text-slate-900">🎮 寶可夢聽音大冒險（8 大語音闖關關卡）</h2>
-            <p class="text-xs text-slate-600 font-bold">結合老師朗讀原音，邊玩邊練聽力與字詞反應！過關可解鎖「🎮 遊戲大師徽章」！</p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="bg-purple-700 text-white text-xs font-black px-2.5 py-0.5 rounded-full">8 大獨立關卡 × 每關 20～24 題進階挑戰</span>
+              <span id="gameTotalStarsBadge" class="bg-yellow-300 text-slate-950 text-xs font-black px-2.5 py-0.5 rounded-full border border-slate-900">⭐ 累計星星：0 / 24 星</span>
+            </div>
+            <h2 class="text-base sm:text-xl font-black text-slate-900 mt-1">🎮 寶可夢聽音大冒險（課文語音實戰闖關＋榮譽排行榜）</h2>
+            <p class="text-xs text-slate-600 font-bold mt-0.5">每關至少 20 題以上（隨題數推進自動升級難度！），所有通關星等與連擊紀錄自動永久保存！</p>
           </div>
-          <div class="flex items-center gap-2">
+
+          <!-- 挑戰者名字輸入與排行榜切換 -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-2xl border-2 border-slate-900">
+              <span class="text-xs font-black text-slate-600">🧢 挑戰者：</span>
+              <input id="challengerNameInput" type="text" maxlength="12" value="小智訓練家" oninput="updateChallengerName(this.value)" placeholder="輸入名字上榜" class="w-28 sm:w-32 text-xs sm:text-sm font-black text-red-600 outline-none bg-transparent" />
+            </div>
+            <button id="toggleLeaderboardBtn" onclick="toggleLeaderboardPanel()" class="poke-btn bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs sm:text-sm font-black px-3.5 py-2 rounded-2xl">
+              🏆 挑戰者排行榜 (<span id="leaderboardCountBadge">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <!-- 8 大關卡進度卡片網格（每卡顯示最佳進度 X/20+、最高連擊、最高分與星等） -->
+        <div id="gameStageTabs" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5"></div>
+
+        <!-- 輔助控制列 -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-purple-200">
+          <div class="flex flex-wrap items-center gap-2">
             <label class="flex items-center gap-1.5 text-xs font-black bg-white px-3 py-1.5 rounded-xl border-2 border-slate-800 cursor-pointer">
               <input id="gameHintModeChk" type="checkbox" checked onchange="GameEngine.toggleHintMode(this.checked)" class="accent-red-600" />
-              <span>💡 顯示注音提示</span>
+              <span>💡 顯示注音/提示</span>
             </label>
             <button onclick="playCurrentGameTargetAudio(1.0)" class="poke-btn bg-yellow-400 hover:bg-yellow-300 text-slate-950 text-xs font-black px-3 py-1.5 rounded-xl">
-              🔊 重聽題目
+              🔊 重聽題目 (1.0x)
             </button>
             <button onclick="playCurrentGameTargetAudio(0.75)" class="poke-btn bg-sky-300 hover:bg-sky-200 text-slate-950 text-xs font-black px-3 py-1.5 rounded-xl">
               🐢 0.75x 慢速
             </button>
           </div>
+          <div id="gameDifficultyBadge" class="text-xs font-black bg-slate-900 text-yellow-300 px-3 py-1.5 rounded-xl">
+            🔥 難度階段：第 1 階・暖身聽音
+          </div>
         </div>
-
-        <!-- 8 大關卡選單 -->
-        <div id="gameStageTabs" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
       </div>
 
-      <!-- 遊戲狀態 HUD -->
-      <div class="bg-slate-900 text-white px-4 py-2.5 rounded-2xl border-2 border-slate-950 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-black">
-        <div class="flex items-center gap-3">
+      <!-- 🏆 挑戰者榮譽排行榜面板 -->
+      <div id="challengerLeaderboardPanel" class="hidden poke-card p-4 sm:p-5 bg-gradient-to-br from-amber-50 via-white to-yellow-50 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-amber-200 pb-3">
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900">🏆 寶可夢聽音挑戰者榮譽排行榜</h3>
+            <p class="text-xs font-bold text-slate-600">每次完成或結束闖關自動登錄戰績！歡迎兄弟姊妹、同學輪流輸入名字挑戰高分！</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <select id="leaderboardStageFilter" onchange="renderLeaderboardPanel()" class="px-2.5 py-1.5 rounded-xl border-2 border-slate-800 text-xs font-black bg-white outline-none">
+              <option value="all">📊 全部 8 大關卡總榜</option>
+              <option value="1">第 1 關：精靈球聽音射擊戰</option>
+              <option value="2">第 2 關：台語敲磚大作戰</option>
+              <option value="3">第 3 關：道館魔王終極戰</option>
+              <option value="4">第 4 關：聽音翻牌記憶配對</option>
+              <option value="5">第 5 關：台語句子大接龍</option>
+              <option value="6">第 6 關：地鼠聽音敲敲樂</option>
+              <option value="7">第 7 關：語音白話連連看</option>
+              <option value="8">第 8 關：閃電進化大考驗</option>
+            </select>
+            <button onclick="exportLeaderboardReport()" class="poke-btn bg-slate-900 text-yellow-300 text-xs font-black px-3 py-1.5 rounded-xl">
+              📄 匯出排行榜 (.txt)
+            </button>
+            <button onclick="clearLeaderboardWithConfirm(this)" class="poke-btn bg-rose-100 hover:bg-rose-200 text-rose-900 text-xs font-black px-3 py-1.5 rounded-xl">
+              🗑️ 清空紀錄
+            </button>
+          </div>
+        </div>
+        <div id="leaderboardTableContainer" class="overflow-x-auto"></div>
+      </div>
+
+      <!-- 遊戲即時狀態 HUD -->
+      <div class="bg-slate-900 text-white px-4 py-3 rounded-2xl border-2 border-slate-950 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-black">
+        <div class="flex items-center gap-3 flex-wrap">
           <span id="gameStageTitle" class="text-yellow-300">第 1 關：精靈球聽音射擊戰</span>
-          <span id="gameScoreHud" class="text-emerald-300">進度：0 / 5</span>
+          <span id="gameScoreHud" class="text-emerald-300">進度：0 / 22</span>
+          <span id="gamePointsHud" class="text-sky-300 font-mono">得分：0 分</span>
+          <span id="gameComboHud" class="text-amber-300 font-mono">連擊：0x</span>
         </div>
         <div id="gameTargetPrompt" class="bg-slate-800 px-3 py-1 rounded-xl border border-slate-700 text-sky-300">
-          🎧 請按下方「開始闖關」聽題目發音！
+          🎧 請按「▶️ 開始 / 重來」聽題目發音！
         </div>
         <div class="flex items-center gap-2">
-          <span id="gameLivesHud" class="text-rose-400">❤️❤️❤️</span>
-          <button onclick="GameEngine.startStage(GameEngine.stage)" class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 px-3 py-1 rounded-xl font-black">
+          <span id="gameLivesHud" class="text-rose-400">❤️❤️❤️❤️❤️</span>
+          <button onclick="GameEngine.startStage(GameEngine.stage)" class="bg-emerald-400 hover:bg-emerald-300 text-slate-950 px-3.5 py-1.5 rounded-xl font-black">
             ▶️ 開始 / 重來
           </button>
         </div>
@@ -479,7 +514,6 @@
         <div class="relative w-full h-80 sm:h-96 bg-slate-950 rounded-3xl border-4 border-slate-900 overflow-hidden shadow-lg">
           <canvas id="gameCanvas" class="w-full h-full block"></canvas>
         </div>
-        <!-- 畫布外觸控方向與發射大按鈕 -->
         <div class="flex items-center justify-center gap-3 pt-1">
           <button onpointerdown="GameEngine.setTouchMove(-1)" onpointerup="GameEngine.setTouchMove(0)" onpointerleave="GameEngine.setTouchMove(0)" class="poke-btn bg-white active:bg-yellow-200 px-6 py-3 rounded-2xl font-black text-base select-none">
             ◀ 向左移動
@@ -493,8 +527,8 @@
         </div>
       </div>
 
-      <!-- DOM 益智互動遊戲區（第 4～8 關：翻牌、接龍、打地鼠、連連看、閃電進化） -->
-      <div id="domGameWrapper" class="hidden poke-card p-4 sm:p-5 bg-white min-h-[320px]"></div>
+      <!-- DOM 益智互動遊戲區（第 4～8 關） -->
+      <div id="domGameWrapper" class="hidden poke-card p-4 sm:p-5 bg-white min-h-[340px]"></div>
     </section>
 
     <!-- ==================== 模式五：道館徽章挑戰賽 ==================== -->
@@ -946,7 +980,7 @@
     };
 
     // ==========================================
-    // 3. 4週冠軍集訓營專屬教案資料（教練級規劃＋大人陪練指南）
+    // 3. 4週冠軍集訓營專屬教案資料 (COACH_CAMP_DATA)
     // ==========================================
     const COACH_CAMP_DATA = {
       "01": {
@@ -1047,12 +1081,7 @@
         week2: {
           arcs: [
             {
-              para: 1,
-              badge: "【第 1 段】童年回憶",
-              emotionTag: "😊 輕鬆、自嘲、帶點俏皮",
-              badgeColor: "bg-slate-800 text-yellow-300",
-              energy: 3.5,
-              energyLabel: "輕快幽默 (Lv.3.5)",
+              para: 1, badge: "【第 1 段】童年回憶", emotionTag: "😊 輕鬆、自嘲、帶點俏皮", badgeColor: "bg-slate-800 text-yellow-300", energy: 3.5, energyLabel: "輕快幽默 (Lv.3.5)",
               pace: "中等偏快、語調活潑上揚，像在跟朋友分享小時候的趣事。",
               expression: "眉眼彎彎帶點俏皮的「真沒辦法」微笑，念「咳嗽、發燒、頭殼疼」時可微微點頭數出來。",
               keywords: "歹育飼(ㄆㄞˇ ㄧㄜ ㄑㄧˋ)、磕袂著(ㄎㄚ ㄅㄝˋ ㄉㄧㄜ)、行灶跤(ㄍㄧㄚˊ ㄗㄠˋ ㄎㄚ)",
@@ -1065,12 +1094,7 @@
               ]
             },
             {
-              para: 2,
-              badge: "【第 2 段】狂風暴雨與急病",
-              emotionTag: "⛈️ 突發驚險 ➔ 🥶 狼狽發抖 ➔ 😵 痛苦不堪",
-              badgeColor: "bg-sky-700 text-white",
-              energy: 4.8,
-              energyLabel: "緊張高張力 (Lv.5)",
+              para: 2, badge: "【第 2 段】狂風暴雨與急病", emotionTag: "⛈️ 突發驚險 ➔ 🥶 狼狽發抖 ➔ 😵 痛苦不堪", badgeColor: "bg-sky-700 text-white", energy: 4.8, energyLabel: "緊張高張力 (Lv.5)",
               pace: "前半段遇暴雨「語速加快緊張」；「害矣！」驚呼；後半段頭疼暈眩「放慢無力」。",
               expression: "從遇雨的驚訝睜眼，轉為「咇咇掣」皺眉發抖，到「烏趖趖」眼神迷茫微弱。",
               keywords: "一目𥍉仔(ㄐㄧ ㄅㄚ ㄋㄧㄚˋ)、澹糊糊(ㄉㄚㄇˊ ㄍㄛˊ ㄍㄛˊ)、咇咇掣(ㄆㄧˋ ㄆㄧˋ ㄘㄨㄚˋ)、必開(ㄅㄧ ㄎㄨㄟ)",
@@ -1083,12 +1107,7 @@
               ]
             },
             {
-              para: 3,
-              badge: "【第 3 段】半夜醒來",
-              emotionTag: "❓ 昏沉初醒 ➔ 😮 疑惑驚訝 ➔ 😔 無奈接受",
-              badgeColor: "bg-purple-700 text-white",
-              energy: 2.0,
-              energyLabel: "輕柔安靜 (Lv.2)",
+              para: 3, badge: "【第 3 段】半夜醒來", emotionTag: "❓ 昏沉初醒 ➔ 😮 疑惑驚訝 ➔ 😔 無奈接受", badgeColor: "bg-purple-700 text-white", energy: 2.0, energyLabel: "輕柔安靜 (Lv.2)",
               pace: "放慢、輕聲細語，營造半夜安靜病房的空間感。",
               expression: "「欸！」眼神帶著剛醒來的疑惑環顧左、右；看見媽媽時表情瞬間變得心疼又溫暖。",
               keywords: "半暝仔(ㄅㄨㄚˋ ㄇㄟˊ ㄚ)、目珠擘金(ㄅㄚ ㄐㄧㄡ ㄅㄟ ㄍㄧㄇ)、眠床(ㄅㄧㄣˊ ㄘㄥˊ)、射針(ㄒㄧㄚˋ ㄐㄧㄚㄇ)",
@@ -1101,12 +1120,7 @@
               ]
             },
             {
-              para: 4,
-              badge: "【第 4 段】操場與病床的對比",
-              emotionTag: "🏃 陽光飛揚 ➔ 🛏️ 瞬間墜落、消沉",
-              badgeColor: "bg-amber-600 text-white",
-              energy: 2.6,
-              energyLabel: "亮轉暗反差 (Lv.2.6)",
+              para: 4, badge: "【第 4 段】操場與病床的對比", emotionTag: "🏃 陽光飛揚 ➔ 🛏️ 瞬間墜落、消沉", badgeColor: "bg-amber-600 text-white", energy: 2.6, energyLabel: "亮轉暗反差 (Lv.2.6)",
               pace: "前兩句明亮有力，從「這聲煞…」急轉成低沉虛弱。",
               expression: "先是想著打球的陽光笑容，一秒切換成動彈不得、骨頭痠痛的皺眉委屈。",
               keywords: "活跳跳(ㄨㄚ ㄊㄧㄠˋ ㄊㄧㄠˋ)、走相逐(ㄗㄠ ㄒㄧㄜ ㄧㄛ)、痠骨輪，疼骨節、消瘦落肉",
@@ -1119,12 +1133,7 @@
               ]
             },
             {
-              para: 5,
-              badge: "【第 5 段】全篇戲劇最高潮",
-              emotionTag: "😱 恐慌窒息、呼救無門 ➔ 😄 溫暖安心、破涕為笑",
-              badgeColor: "bg-red-700 text-white",
-              energy: 4.5,
-              energyLabel: "低谷轉歡笑 (Lv.1→4.5)",
+              para: 5, badge: "【第 5 段】全篇戲劇最高潮", emotionTag: "😱 恐慌窒息、呼救無門 ➔ 😄 溫暖安心、破涕為笑", badgeColor: "bg-red-700 text-white", energy: 4.5, energyLabel: "低谷轉歡笑 (Lv.1→4.5)",
               pace: "氣喘發作時呼吸短促壓迫；轉到「若輪著阿爸…」馬上變溫暖快樂、節奏流暢！",
               expression: "前半段痛苦緊繃（欲哭無目屎），後半段像看到爸爸進門一樣，整張臉笑開來！",
               keywords: "痚呴(ㄏㄝ ㄍㄨ)、壓牢牢(ㄉㄝˋ ㄉㄧㄠˊ ㄉㄧㄠˊ)、笑詼(ㄑㄧㄜˋ ㄎㄨㄟ)、治枵兼治病",
@@ -1136,12 +1145,7 @@
               ]
             },
             {
-              para: 6,
-              badge: "【第 6 段】病房見聞與轉念",
-              emotionTag: "😢 震撼同情 ➔ ✊ 自我激勵、轉念",
-              badgeColor: "bg-rose-800 text-white",
-              energy: 3.8,
-              energyLabel: "沉重轉堅定 (Lv.3.8)",
+              para: 6, badge: "【第 6 段】病房見聞與轉念", emotionTag: "😢 震撼同情 ➔ ✊ 自我激勵、轉念", badgeColor: "bg-rose-800 text-white", energy: 3.8, energyLabel: "沉重轉堅定 (Lv.3.8)",
               pace: "前段穩重緩慢、充滿同情；最後一句「家己愛堅強起來」語速穩健、重音敲下。",
               expression: "聽到哀號與看到老人瘀青時眼神流露不捨；最後抬頭挺胸、眼神堅定直視主評審。",
               keywords: "精神(ㄐㄧㄥ ㄒㄧㄣˊ，清醒)、哀爸叫母(ㄞ ㄅㄝˋ ㄍㄧㄜˋ ㄅㄨˋ)、苦毒(ㄎㄛ ㄉㄛ)、堅強(ㄍㄧㄥ ㄍㄧㄨㄥˊ)",
@@ -1153,12 +1157,7 @@
               ]
             },
             {
-              para: 7,
-              badge: "【第 7 段】感恩與結尾收網",
-              emotionTag: "❤️ 溫馨感性 ➔ 😉 俏皮開朗、幽默大定格",
-              badgeColor: "bg-emerald-700 text-white",
-              energy: 4.9,
-              energyLabel: "溫暖陽光收尾 (Lv.5)",
+              para: 7, badge: "【第 7 段】感恩與結尾收網", emotionTag: "❤️ 溫馨感性 ➔ 😉 俏皮開朗、幽默大定格", badgeColor: "bg-emerald-700 text-white", energy: 4.9, energyLabel: "溫暖陽光收尾 (Lv.5)",
               pace: "前段誠懇溫暖；「毋過」轉折帶出真心話；最後一句放慢字字清楚、精神飽滿！",
               expression: "帶著感恩溫暖的微笑，眼神從左到右掃視全場評審，結尾「啦！」字陽光開朗定格。",
               keywords: "親情五十(ㄑㄧㄣ ㄐㄧㄚ ㄍㄛˋ ㄗㄚ)、真溫暖(ㄐㄧㄣ ㄨㄣ ㄌㄨㄢˋ)、算較會和啦(ㄙㄥˋ ㄎㄚ ㄝ ㄏㄛˊ ㄌㄚˋ)",
@@ -1247,9 +1246,7 @@
         week1: {
           days: [
             {
-              day: "週一",
-              title: "美食料理與食材名詞（唸出香味感）",
-              tip: "報菜名時要粒粒分明、帶點口水快流下來的生動語氣！",
+              day: "週一", title: "美食料理與食材名詞（唸出香味感）", tip: "報菜名時要粒粒分明、帶點口水快流下來的生動語氣！",
               words: [
                 { word: "蔭豉仔", zy: "ㄧㄇˋ ㄒㄧㄚˋ", tl: "ìm-sīnn-á", def: "黑豆豉，傳統發酵醃製調味醬料。", tipDetail: "語音示範檔中「豉」讀鼻化音 ㄒㄧㄚˋ，鼻腔共鳴要出來。", coachDemo: "請大人帶孩子指著鼻翼感受「ㄒㄧㄚˋ」的鼻音震動。" },
                 { word: "鹹卵", zy: "ㄍㄧㄚㄇ ㄋㄥ", tl: "kiâm-nn̄g", def: "鹹蛋、鹹鴨蛋。", tipDetail: "「鹹」閉雙唇收尾（-m），「卵」成音節鼻音 ㄋㄥ。", coachDemo: "報菜名時節奏輕快，像在點餐廳招牌菜。" },
@@ -1261,9 +1258,7 @@
               ]
             },
             {
-              day: "週二",
-              title: "生動疊字與入聲短促音（評審聽基本功）",
-              tip: "疊字要讀出畫面感，入聲字「捌、攑、合、確、實、物」收音要短促急停！",
+              day: "週二", title: "生動疊字與入聲短促音（評審聽基本功）", tip: "疊字要讀出畫面感，入聲字「捌、攑、合、確、實、物」收音要短促急停！",
               words: [
                 { word: "空空空", zy: "ㄎㄤ ㄎㄤ ㄎㄤ", tl: "khang-khang-khang", def: "吃得一乾二淨、精光。", tipDetail: "三個字節奏明快且有驚嘆感，形容爸爸吃光整盤的厲害。", coachDemo: "大人可比出盤子空空的動作，讓孩子誇張生動地念出來！" },
                 { word: "小可仔", zy: "ㄒㄧㄜ ㄎㄨㄚ ㄚ", tl: "sió-khuá-á", def: "稍微、一點點。", tipDetail: "輕柔小心翼翼的語氣，表現剛咬一小口苦瓜的試探。", coachDemo: "配合瞇眼試吃一小口的表情練習。" },
@@ -1274,9 +1269,7 @@
               ]
             },
             {
-              day: "週三",
-              title: "表情神態與道地熟語（加分關鍵詞）",
-              tip: "把害怕吃苦瓜的皺眉表情融入聲音裡！",
+              day: "週三", title: "表情神態與道地熟語（加分關鍵詞）", tip: "把害怕吃苦瓜的皺眉表情融入聲音裡！",
               words: [
                 { word: "捌代誌", zy: "ㄅㄚ ㄉㄞˋ ㄐㄧˋ", tl: "bat-tāi-tsì", def: "懂事、明白事理。", tipDetail: "「捌(bat)」是 -t 短促入聲，開頭穩健自信。", coachDemo: "提醒孩子「捌」舌尖頂上齒齦短促收住。" },
                 { word: "三不五時", zy: "ㄙㄢ ㄅㄨˇ ㄍㄛˇ ㄒㄧˊ", tl: "sam-put-gōo-sî", def: "時常、經常。", tipDetail: "四字連貫流暢，帶點「怎麼又出現了」的小無奈。", coachDemo: "語調輕快帶過，引出後面的苦瓜料理。" },
@@ -1287,9 +1280,7 @@
               ]
             },
             {
-              day: "週四",
-              title: "餐桌動作與生活口語正音（避免國語腔）",
-              tip: "注意「𧪬」「袂𣆳」「嚨喉」「物配」「食慣勢」等道地台語用字。",
+              day: "週四", title: "餐桌動作與生活口語正音（避免國語腔）", tip: "注意「𧪬」「袂𣆳」「嚨喉」「物配」「食慣勢」等道地台語用字。",
               words: [
                 { word: "合意", zy: "ㄍㄚˋ ㄧˋ", tl: "kah-ì", def: "喜歡、中意。", tipDetail: "「合(kah)」短促喉塞音，接「意」飽滿肯定。", coachDemo: "在全篇多次出現，每次都要念得親切自然。" },
                 { word: "暗頓", zy: "ㄢˋ ㄉㄥˋ", tl: "àm-tǹg", def: "晚餐、晚飯。", tipDetail: "注意「暗」雙唇閉合，引出晚餐餐桌故事。", coachDemo: "注意不要念成國語的「暗頓」，台語「頓」讀 ㄉㄥˋ。" },
@@ -1322,12 +1313,7 @@
         week2: {
           arcs: [
             {
-              para: 1,
-              badge: "【第 1 段】爸爸的苦瓜菜單",
-              emotionTag: "😋 讚嘆、如數家珍",
-              badgeColor: "bg-emerald-700 text-white",
-              energy: 3.6,
-              energyLabel: "明快報菜名 (Lv.3.6)",
+              para: 1, badge: "【第 1 段】爸爸的苦瓜菜單", emotionTag: "😋 讚嘆、如數家珍", badgeColor: "bg-emerald-700 text-white", energy: 3.6, energyLabel: "明快報菜名 (Lv.3.6)",
               pace: "中快、節奏明快，像在介紹高級餐廳的招牌菜單。",
               expression: "眼睛發亮、嘴角微揚，帶著佩服爸爸超愛吃苦瓜的讚嘆表情。",
               keywords: "蔭豉仔(ㄧㄇˋ ㄒㄧㄚˋ)、鹹卵(ㄍㄧㄚㄇ ㄋㄥ)、苦瓜封(ㄎㄛ ㄍㄨㄟ ㄏㄨㄥ)、真合意(ㄐㄧㄣ ㄍㄚˋ ㄧˋ)",
@@ -1340,12 +1326,7 @@
               ]
             },
             {
-              para: 2,
-              badge: "【第 2 段】姊妹的疑問",
-              emotionTag: "👀 互相偷看 ➔ 🤔 滿頭問號",
-              badgeColor: "bg-amber-600 text-white",
-              energy: 2.8,
-              energyLabel: "好奇納悶 (Lv.2.8)",
+              para: 2, badge: "【第 2 段】姊妹的疑問", emotionTag: "👀 互相偷看 ➔ 🤔 滿頭問號", badgeColor: "bg-amber-600 text-white", energy: 2.8, energyLabel: "好奇納悶 (Lv.2.8)",
               pace: "中速、疑問句語尾自然上揚，念「空空空」時略微誇張。",
               expression: "「你看我、我看你」眼神左右偷看；「仙想都想無」微微歪頭一臉困惑。",
               keywords: "捌代誌(ㄅㄚ ㄉㄞˋ ㄐㄧˋ)、三不五時、空空空(ㄎㄤ ㄎㄤ ㄎㄤ)、仙想都想無",
@@ -1358,12 +1339,7 @@
               ]
             },
             {
-              para: 3,
-              badge: "【第 3 段】餐桌大逆轉",
-              emotionTag: "😣 面憂面結 ➔ 🤩 驚喜回甘",
-              badgeColor: "bg-red-600 text-white",
-              energy: 4.8,
-              energyLabel: "戲劇高潮轉折 (Lv.4.8)",
+              para: 3, badge: "【第 3 段】餐桌大逆轉", emotionTag: "😣 面憂面結 ➔ 🤩 驚喜回甘", badgeColor: "bg-red-600 text-white", energy: 4.8, energyLabel: "戲劇高潮轉折 (Lv.4.8)",
               pace: "前段皺眉慢速，爸爸說話親切慈祥，吃到回甘時語氣豁然開朗！",
               expression: "從愁眉苦臉、小心試吃，到瞪大眼睛驚喜回甘，臉部表情變化最豐富的一段！",
               keywords: "面憂面結、肉豉仔(ㄅㄚˋ ㄒㄧㄚˋ)、袂𣆳(ㄅㄝ ㄅㄞˋ)、嚨喉(ㄋㄚ ㄠˊ)、回甘(ㄏㄨㄟ ㄍㄢ)",
@@ -1376,12 +1352,7 @@
               ]
             },
             {
-              para: 4,
-              badge: "【第 4 段】菜市場新發現",
-              emotionTag: "🛒 好奇探索 ➔ 👍 讚不絕口",
-              badgeColor: "bg-sky-700 text-white",
-              energy: 3.9,
-              energyLabel: "輕快探索 (Lv.3.9)",
+              para: 4, badge: "【第 4 段】菜市場新發現", emotionTag: "🛒 好奇探索 ➔ 👍 讚不絕口", badgeColor: "bg-sky-700 text-white", energy: 3.9, energyLabel: "輕快探索 (Lv.3.9)",
               pace: "輕快流暢，充滿逛菜市場買菜的生活感。",
               expression: "看見青色山苦瓜時眼神一亮，最後「誠合喙」露出滿足笑容。",
               keywords: "沓沓仔(ㄉㄠˋ ㄉㄠˋ ㄚ)、憂頭結面、山苦瓜(ㄙㄨㄢ ㄎㄛ ㄍㄨㄟ)、苦iám苦iám、合喙(ㄍㄚˋ ㄘㄨㄟˋ)",
@@ -1394,12 +1365,7 @@
               ]
             },
             {
-              para: 5,
-              badge: "【第 5 段】幸福收尾",
-              emotionTag: "❤️ 全家溫馨 ➔ 😄 自信響亮定格",
-              badgeColor: "bg-indigo-700 text-white",
-              energy: 5.0,
-              energyLabel: "溫馨問答滿分收尾 (Lv.5)",
+              para: 5, badge: "【第 5 段】幸福收尾", emotionTag: "❤️ 全家溫馨 ➔ 😄 自信響亮定格", badgeColor: "bg-indigo-700 text-white", energy: 5.0, energyLabel: "溫馨問答滿分收尾 (Lv.5)",
               pace: "溫暖舒緩，結尾問答「苦瓜敢會苦？袂啦！」爽朗有力！",
               expression: "帶著幸福微笑看著全場評審，最後回答「袂啦！」燦爛定格 2 秒。",
               keywords: "物配(ㄇㄧˋ ㄆㄨㄟˋ)、烏暗料理、食慣勢(ㄐㄧㄚ ㄍㄨㄢˋ ㄒㄧˋ ㄚ)、袂啦(ㄅㄝˋ ㄌㄚˋ)",
@@ -1470,7 +1436,7 @@
     // ==========================================
     // 4. 全域狀態與瀏覽器自動記憶存檔 (localStorage)
     // ==========================================
-    const STORAGE_KEY = "taiwanese_poke_dojo_v5";
+    const STORAGE_KEY = "taiwanese_poke_dojo_v6";
     let currentLessonId = "01";
     let currentMode = "story";
     let tunerMode = false;
@@ -1480,6 +1446,11 @@
     const flippedVocabCards = new Set();
     const masteredVocabWords = new Set();
     const earnedBadges = { "01": false, "06": false, "coach": false, "game": false };
+
+    // 挑戰者名字、8大遊戲關卡進度與排行榜狀態
+    let challengerName = "小智訓練家";
+    let gameStageProgress = {}; // key: `${lessonId}-${stageId}` -> { bestCleared, bestScore, bestCombo, stars }
+    let challengerLeaderboard = []; // array of { name, lessonId, stageId, stageName, cleared, goal, maxCombo, score, stars, date }
 
     // 4週冠軍集訓營狀態
     let currentCoachWeek = 1;
@@ -1521,13 +1492,12 @@
     let remindedUploadOnce = false;
 
     // 波形互動編輯器狀態
-    let waveEditTarget = "sentence"; // "sentence" | "vocab"
+    let waveEditTarget = "sentence";
     let selectedSentIdx = 0;
     let selectedVocabIdx = 0;
     let waveZoom = 1;
     let waveScrollStart = 0;
-    let waveDragMode = null; // "start" | "end" | "divider" | "pan"
-    let waveDragDivIdx = -1;
+    let waveDragMode = null;
     let waveDragStartX = 0;
     let waveDragOrigScroll = 0;
 
@@ -1568,6 +1538,15 @@
         if (Array.isArray(saved.masteredVocab)) {
           saved.masteredVocab.forEach(k => masteredVocabWords.add(k));
         }
+        if (typeof saved.challengerName === "string" && saved.challengerName.trim()) {
+          challengerName = saved.challengerName.trim();
+        }
+        if (saved.gameStageProgress && typeof saved.gameStageProgress === "object") {
+          gameStageProgress = saved.gameStageProgress;
+        }
+        if (Array.isArray(saved.challengerLeaderboard)) {
+          challengerLeaderboard = saved.challengerLeaderboard;
+        }
       } catch (e) {}
     }
 
@@ -1577,6 +1556,9 @@
           xp,
           badges: earnedBadges,
           masteredVocab: Array.from(masteredVocabWords),
+          challengerName,
+          gameStageProgress,
+          challengerLeaderboard,
           sentences: {
             "01": SENTENCES_DATA["01"].map(s => ({ id: s.id, start: s.start, end: s.end })),
             "06": SENTENCES_DATA["06"].map(s => ({ id: s.id, start: s.start, end: s.end }))
@@ -1754,6 +1736,11 @@
       async playHit() {
         if (!(await this.init())) return;
         this.sfxSynth.triggerAttackRelease(["A4", "E5"], "16n");
+      },
+      async playPowerup() {
+        if (!(await this.init())) return;
+        const now = Tone.now();
+        ["G5", "B5", "D6", "G6"].forEach((n, i) => this.sfxSynth.triggerAttackRelease(n, "32n", now + i * 0.045));
       },
       async playLightning() {
         if (!(await this.init())) return;
@@ -1978,7 +1965,7 @@
     function extractSpeechAndPauses(audioBuffer) {
       const sr = audioBuffer.sampleRate;
       const ch = audioBuffer.getChannelData(0);
-      const hop = Math.floor(sr * 0.01); // 10ms frame
+      const hop = Math.floor(sr * 0.01);
       const numFrames = Math.floor(ch.length / hop);
       const rms = new Float32Array(numFrames);
 
@@ -2012,7 +1999,6 @@
         isSpeech[f] = state;
       }
 
-      // 填補 80ms 以內的極短聲母間隙
       let gap = 0;
       for (let f = 0; f < numFrames; f++) {
         if (!isSpeech[f]) {
@@ -2406,7 +2392,6 @@
       showToast("⚡ 詞彙秒數已依最新句點重算", "已保留您手動精調過的詞彙，其餘全數自動對齊！");
     }
 
-    // 處理音檔上傳與自動偵測
     document.getElementById("audioUploadInput").addEventListener("change", async (e) => {
       const files = Array.from(e.target.files || []);
       if (files.length === 0) return;
@@ -2685,7 +2670,6 @@
       const winEnd = Math.min(dur, winStart + winDur);
       const tToX = (t) => ((t - winStart) / Math.max(0.01, winEnd - winStart)) * W;
 
-      // 繪製選取區間底色
       const sents = SENTENCES_DATA[currentLessonId] || [];
       const vocabs = LESSONS_DATA[currentLessonId].vocab || [];
       if (waveEditTarget === "vocab" && vocabs[selectedVocabIdx]) {
@@ -2703,7 +2687,6 @@
         ctx.fillRect(tToX(s.start), 0, Math.max(3, tToX(s.end) - tToX(s.start)), H);
       }
 
-      // 繪製音訊波形峰值
       const chData = buf.getChannelData(0);
       const sr = buf.sampleRate;
       const sSample = Math.floor(winStart * sr);
@@ -2728,7 +2711,6 @@
       }
       ctx.stroke();
 
-      // 繪製所有句子切點線
       sents.forEach((s, idx) => {
         if (s.end >= winStart && s.end <= winEnd) {
           const x = tToX(s.end);
@@ -2748,7 +2730,6 @@
         }
       });
 
-      // 繪製目前選取項目的綠「起」與橘「終」拉桿
       let curStart = 0, curEnd = 0;
       if (waveEditTarget === "vocab" && vocabs[selectedVocabIdx]) {
         curStart = vocabs[selectedVocabIdx].startTime;
@@ -2782,7 +2763,6 @@
       drawHandle(curStart, "#22c55e", "起");
       drawHandle(curEnd, "#f97316", "終");
 
-      // 繪製播放紅線
       if (typeof playheadSec === "number" && playheadSec >= winStart && playheadSec <= winEnd) {
         const px = tToX(playheadSec);
         ctx.strokeStyle = "#f43f5e";
@@ -2838,7 +2818,6 @@
             waveDragMode = "end";
             return;
           }
-          // 點擊其他句子區間直接切換選取
           const hitIdx = sents.findIndex(item => clickT >= item.start && clickT <= item.end);
           if (hitIdx !== -1 && hitIdx !== selectedSentIdx) {
             selectedSentIdx = hitIdx;
@@ -3025,6 +3004,7 @@
       } else if (mode === "coach") {
         renderCoachWeekBody();
       } else if (mode === "game") {
+        syncGameMetaUI();
         GameEngine.startStage(GameEngine.stage);
       } else if (mode === "quiz") {
         renderQuiz();
@@ -3273,7 +3253,6 @@
         return `
           <div id="vocab-card-${idx}" onclick="toggleVocabFlip(${idx})" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleVocabFlip(${idx});}" class="vocab-flip-card ${isFlipped ? "is-flipped" : ""} ${isMastered ? "is-mastered" : ""}">
             <div class="vocab-flip-inner">
-              <!-- 正面：漢字與聽音考驗 -->
               <div class="vocab-flip-face">
                 <div class="flex items-center justify-between gap-2">
                   <div class="flex items-center gap-1.5">
@@ -3300,7 +3279,6 @@
                 </div>
               </div>
 
-              <!-- 背面：注音、台羅、釋義與精調控制 -->
               <div class="vocab-flip-face vocab-flip-back">
                 <div class="flex items-center justify-between gap-2">
                   <strong class="text-base font-black text-slate-900">${v.word}</strong>
@@ -3476,7 +3454,6 @@
       }
     }
 
-    // 第1週：8題實戰測驗互動
     function answerWeek1Quiz(optIdx) {
       const camp = COACH_CAMP_DATA[currentLessonId];
       const qList = camp.week1.quiz || [];
@@ -3526,7 +3503,6 @@
       return cnt;
     }
 
-    // 第2週：互動情緒曲線與單段聲情練功台
     function selectCoachWeek2Para(paraNum) {
       week2ActivePara = paraNum;
       SoundFX.playClick();
@@ -3541,7 +3517,6 @@
       renderCoachWeekBody();
     }
 
-    // 第3週：互動舞台視線定點與6大台風習慣
     function selectCoachGazeCheckpoint(idx) {
       week3ActiveGazeIdx = idx;
       SoundFX.playClick();
@@ -3560,7 +3535,6 @@
       renderCoachWeekBody();
     }
 
-    // 第4週：大人裁判20顆星給分與獎狀互動
     function setCoachStarRating(key, val) {
       coachStarScores[key] = val;
       SoundFX.playCatch();
@@ -3687,7 +3661,6 @@
             `).join("")}
           </div>
 
-          <!-- 入聲與疊字 8 題實戰測驗 -->
           ${curQ ? `
             <div class="poke-card p-4 sm:p-5 bg-gradient-to-br from-purple-50 via-white to-pink-50 space-y-3">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3736,7 +3709,6 @@
             </div>
           ` : ""}
 
-          <!-- 週五至週末：親子 1 秒快問快答抽考機 -->
           <div class="poke-card p-4 bg-gradient-to-r from-indigo-50 to-sky-50 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h5 class="font-black text-sm sm:text-base text-indigo-950">🎲 週五至週末驗收：親子 1 秒快問快答抽考機</h5>
@@ -3761,7 +3733,6 @@
             </div>
           </div>
 
-          <!-- 易錯字音防雷提醒 -->
           <div class="poke-card p-4 bg-rose-50 border-rose-700 space-y-2">
             <h5 class="font-black text-sm sm:text-base text-rose-900">⚠️ 易錯字音防雷提醒（教練筆記）</h5>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -3793,7 +3764,6 @@
           return `${formatTeleprompterAnnotated(s.annotated)}${mark}`;
         }).join(" ");
 
-        // SVG 情緒與聲量高低折線圖
         const nArcs = w2.arcs.length;
         const svgW = 760;
         const yFromE = (e) => 165 - ((e - 1) / 4) * 105;
@@ -3810,7 +3780,6 @@
             <p class="text-xs sm:text-sm text-slate-700 mt-1">朗讀評分高達 45% 的就是「聲情與氣勢」！點擊下方情緒地圖圓點切換段落練功台，並點擊 <strong>🔊 聽整段聲情</strong> 模仿起伏反差。</p>
           </div>
 
-          <!-- 全篇情緒與聲量高低 SVG 折線圖 -->
           <div class="poke-card p-4 bg-white space-y-2.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h5 class="font-black text-sm sm:text-base text-slate-900">📈 全篇情緒與聲量高低圖（點擊各段節點切換單段練功台）</h5>
@@ -3848,7 +3817,6 @@
             </div>
           </div>
 
-          <!-- 互動單段聲情練功台 -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5 items-start">
             <div class="lg:col-span-2 poke-card p-4 sm:p-5 space-y-3">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3864,7 +3832,6 @@
                 </div>
               </div>
 
-              <!-- 本段逐句獨立試聽列 -->
               <div class="flex flex-wrap items-center gap-1.5 bg-blue-50/70 p-2 rounded-xl border border-blue-200">
                 <span class="text-[11px] font-black text-blue-900">🎧 本段逐句試聽：</span>
                 ${activeSents.map(s => {
@@ -3913,7 +3880,6 @@
               </div>
             </div>
 
-            <!-- 右側聲情技巧提示面板 -->
             <div class="space-y-2.5">
               <div class="poke-card p-3.5 bg-rose-50 space-y-1">
                 <span class="bg-red-600 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full">語速與聲量建議</span>
@@ -3940,7 +3906,6 @@
             </div>
           </div>
 
-          <!-- 三個聲音魔法口訣 -->
           <div class="poke-card p-4 bg-amber-50 space-y-2.5">
             <h5 class="font-black text-sm sm:text-base text-amber-950">✨ 給四年級選手的「三個聲音魔法口訣」</h5>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
@@ -3953,7 +3918,6 @@
             </div>
           </div>
 
-          <!-- 第 2 週每日訓練課表 -->
           <div class="poke-card p-4 space-y-2.5">
             <h5 class="font-black text-sm sm:text-base text-slate-900">📅 第 2 週「聲情每日訓練課表」</h5>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
@@ -3985,7 +3949,6 @@
             <p class="text-xs sm:text-sm text-slate-700 mt-1">擺脫「低頭死盯稿子」或「像水草左右晃動」，用穩如松的站姿與精準眼神交流征服全場評審！</p>
           </div>
 
-          <!-- 一、站姿與持稿「穩如松」三原則 -->
           <div class="poke-card p-4 space-y-2.5">
             <h5 class="font-black text-sm sm:text-base text-slate-900">🌲 一、站姿與持稿黃金姿勢（「穩如松」三原則）</h5>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">
@@ -4004,7 +3967,6 @@
             </div>
           </div>
 
-          <!-- 二、互動式評審席視線定點模擬舞台 + 三、全篇文章「精準抬頭 6 大打卡點」 -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-3.5 items-start">
             <div class="poke-card p-4 bg-gradient-to-b from-purple-50 to-white space-y-3">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -4069,7 +4031,6 @@
             </div>
           </div>
 
-          <!-- 四、台風 6 大好習慣打卡 -->
           <div class="poke-card p-4 space-y-2.5">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <h5 class="font-black text-sm sm:text-base text-slate-900">🌟 四、台風 6 大好習慣自我打卡（點一點勾選達成項目）</h5>
@@ -4088,7 +4049,6 @@
             </div>
           </div>
 
-          <!-- 五、第三週居家特訓道具與每日演練法 -->
           <div class="bg-amber-50 border-2 border-amber-400 rounded-2xl p-4 space-y-3">
             <h5 class="font-black text-sm sm:text-base text-amber-950">🧸 五、第三週居家特訓道具與每日演練法</h5>
             <div class="bg-white p-3.5 rounded-xl border border-amber-300 text-xs sm:text-sm text-slate-700 leading-relaxed">
@@ -4155,7 +4115,6 @@
             <p class="text-xs sm:text-sm text-slate-700 mt-1">穿上正式比賽服裝（學校制服或乾淨白襯衫），使用比賽計時器搭配下方完整朗讀提詞機，練習掌控 <strong>3 分鐘（180 秒）黃金節奏</strong>（建議控制在 2 分 20 秒 ～ 2 分 55 秒之間），最後由大人教練評分頒發學習獎狀！</p>
           </div>
 
-          <!-- 步驟一：上台敬禮＋標準報號與自我介紹演練詞 -->
           <div class="bg-slate-900 text-white rounded-2xl p-4 border-2 border-yellow-400 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="text-xs sm:text-sm font-black text-yellow-300">🎤 步驟一：上台敬禮＋標準報號與自我介紹演練詞</span>
@@ -4177,7 +4136,6 @@
             </div>
           </div>
 
-          <!-- 步驟二：模擬賽計時器（國小組標準 3 分鐘 / 180 秒） -->
           <div class="bg-gradient-to-r from-indigo-950 via-slate-900 to-indigo-950 text-white rounded-2xl p-4 sm:p-5 border-2 border-indigo-400 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <div>
@@ -4211,7 +4169,6 @@
             </div>
           </div>
 
-          <!-- 步驟三：全真模擬賽提詞機（Full Teleprompter Script） -->
           <div class="bg-white border-2 border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-slate-200 pb-3">
               <div>
@@ -4271,7 +4228,6 @@
             </div>
           </div>
 
-          <!-- 步驟四：大人語音裁判 20 星評分＋百分制評分＋即時學習獎狀 -->
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
             <div class="poke-card p-4 sm:p-5 bg-purple-50 space-y-3.5">
               <div class="flex flex-wrap items-center justify-between gap-2">
@@ -4395,7 +4351,6 @@
             </div>
           </div>
 
-          <!-- 步驟五：手機錄影回放自評 & 突發狀況安心錦囊 -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div class="bg-sky-50 border-2 border-slate-800 rounded-2xl p-4 space-y-2">
               <h5 class="font-black text-sm sm:text-base text-sky-900">📱 步驟五：手機錄影回放自評 4 檢核</h5>
@@ -4619,72 +4574,278 @@
     }
 
     // ==========================================
-    // 12. 寶可夢聽音遊戲引擎 (8 大互動關卡)
+    // 12. 寶可夢聽音遊戲引擎（8 大關卡 × 每關 20～24 題 × 關卡進度 × 排行榜）
     // ==========================================
     const GAME_STAGES = [
-      { id: 1, name: "第 1 關：精靈球聽音射擊戰", type: "canvas", goal: 5 },
-      { id: 2, name: "第 2 關：台語敲磚大作戰", type: "canvas", goal: 4 },
-      { id: 3, name: "第 3 關：道館魔王終極戰", type: "canvas", goal: 5 },
-      { id: 4, name: "第 4 關：聽音翻牌配對", type: "dom", goal: 4 },
-      { id: 5, name: "第 5 關：台語句子大接龍", type: "dom", goal: 3 },
-      { id: 6, name: "第 6 關：地鼠聽音敲敲樂", type: "dom", goal: 5 },
-      { id: 7, name: "第 7 關：語音白話連連看", type: "dom", goal: 4 },
-      { id: 8, name: "第 8 關：閃電進化大考驗", type: "dom", goal: 6 }
+      { id: 1, shortName: "🎯 聽音射擊戰", name: "第 1 關：精靈球聽音射擊戰", type: "canvas", goal: 22, unit: "波目標" },
+      { id: 2, shortName: "🧱 敲磚大作戰", name: "第 2 關：台語敲磚大作戰", type: "canvas", goal: 20, unit: "局目標磚" },
+      { id: 3, shortName: "👑 魔王終極戰", name: "第 3 關：道館魔王終極戰", type: "canvas", goal: 20, unit: "層護盾" },
+      { id: 4, shortName: "🃏 聽音翻牌配對", name: "第 4 關：聽音翻牌記憶配對", type: "dom", goal: 20, unit: "組配對" },
+      { id: 5, shortName: "🚂 句子大接龍", name: "第 5 關：台語句子大接龍", type: "dom", goal: 20, unit: "句接龍" },
+      { id: 6, shortName: "🔨 地鼠敲敲樂", name: "第 6 關：地鼠聽音敲敲樂", type: "dom", goal: 22, unit: "隻地鼠" },
+      { id: 7, shortName: "🌉 語音連連看", name: "第 7 關：語音白話連連看", type: "dom", goal: 20, unit: "題連線" },
+      { id: 8, shortName: "⚡ 閃電進化考驗", name: "第 8 關：閃電進化大考驗", type: "dom", goal: 24, unit: "題試煉" }
     ];
+
+    function calcStageStars(cleared, goal) {
+      if (cleared >= goal) return 3;
+      if (cleared >= Math.ceil(goal * 0.75)) return 2;
+      if (cleared >= Math.ceil(goal * 0.45)) return 1;
+      return 0;
+    }
+
+    function updateChallengerName(val) {
+      challengerName = (val || "").trim() || "小智訓練家";
+      saveTimestampsToStorage();
+    }
+
+    function syncGameMetaUI() {
+      const nameInput = document.getElementById("challengerNameInput");
+      if (nameInput && document.activeElement !== nameInput) {
+        nameInput.value = challengerName;
+      }
+      const badgeCnt = document.getElementById("leaderboardCountBadge");
+      if (badgeCnt) badgeCnt.textContent = String(challengerLeaderboard.length);
+
+      let totalStars = 0;
+      GAME_STAGES.forEach(st => {
+        const p = gameStageProgress[`${currentLessonId}-${st.id}`];
+        if (p && typeof p.stars === "number") totalStars += p.stars;
+      });
+      const starsBadge = document.getElementById("gameTotalStarsBadge");
+      if (starsBadge) starsBadge.textContent = `⭐ 第 ${currentLessonId} 篇累計星星：${totalStars} / 24 星`;
+    }
+
+    function toggleLeaderboardPanel() {
+      const panel = document.getElementById("challengerLeaderboardPanel");
+      if (!panel) return;
+      SoundFX.playClick();
+      const willShow = panel.classList.contains("hidden");
+      panel.classList.toggle("hidden", !willShow);
+      if (willShow) renderLeaderboardPanel();
+    }
+
+    function recordGameLeaderboardEntry(stageId, cleared, goal, maxCombo, points, stars) {
+      if (cleared <= 0 && points <= 0) return;
+      const stInfo = GAME_STAGES.find(s => s.id === stageId) || GAME_STAGES[0];
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      const cleanName = (challengerName || "").trim() || "小智訓練家";
+
+      const pKey = `${currentLessonId}-${stageId}`;
+      const prev = gameStageProgress[pKey] || { bestCleared: 0, bestScore: 0, bestCombo: 0, stars: 0 };
+      gameStageProgress[pKey] = {
+        bestCleared: Math.max(prev.bestCleared || 0, cleared),
+        bestScore: Math.max(prev.bestScore || 0, points),
+        bestCombo: Math.max(prev.bestCombo || 0, maxCombo),
+        stars: Math.max(prev.stars || 0, stars)
+      };
+
+      challengerLeaderboard.push({
+        name: cleanName,
+        lessonId: currentLessonId,
+        stageId,
+        stageName: stInfo.name,
+        cleared,
+        goal,
+        maxCombo,
+        score: points,
+        stars,
+        date: dateStr
+      });
+
+      challengerLeaderboard.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (b.cleared !== a.cleared) return b.cleared - a.cleared;
+        return b.maxCombo - a.maxCombo;
+      });
+      if (challengerLeaderboard.length > 60) {
+        challengerLeaderboard = challengerLeaderboard.slice(0, 60);
+      }
+
+      saveTimestampsToStorage();
+      syncGameMetaUI();
+      GameEngine.renderStageTabs();
+      renderLeaderboardPanel();
+    }
+
+    function renderLeaderboardPanel() {
+      const container = document.getElementById("leaderboardTableContainer");
+      if (!container) return;
+      const filterVal = document.getElementById("leaderboardStageFilter")?.value || "all";
+      const list = filterVal === "all"
+        ? challengerLeaderboard
+        : challengerLeaderboard.filter(r => String(r.stageId) === filterVal);
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 text-xs sm:text-sm font-bold text-slate-500">目前還沒有挑戰紀錄，快按「▶️ 開始 / 重來」完成一場挑戰登上榮譽榜吧！</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="bg-slate-900 text-yellow-300 font-black">
+              <th class="py-2 px-3 rounded-tl-xl">名次</th>
+              <th class="py-2 px-3">挑戰者</th>
+              <th class="py-2 px-3">篇目／關卡</th>
+              <th class="py-2 px-3">通關題數</th>
+              <th class="py-2 px-3">最高連擊</th>
+              <th class="py-2 px-3">總得分</th>
+              <th class="py-2 px-3">星等</th>
+              <th class="py-2 px-3 rounded-tr-xl">挑戰時間</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-amber-200 font-bold bg-white">
+            ${list.slice(0, 25).map((r, idx) => {
+              const rankIcon = idx === 0 ? "🥇 第 1 名" : (idx === 1 ? "🥈 第 2 名" : (idx === 2 ? "🥉 第 3 名" : `#${idx + 1}`));
+              const rowBg = idx === 0 ? "bg-yellow-50" : (idx === 1 ? "bg-slate-50" : (idx === 2 ? "bg-amber-50/50" : ""));
+              return `
+                <tr class="${rowBg}">
+                  <td class="py-2 px-3 font-black">${rankIcon}</td>
+                  <td class="py-2 px-3 font-black text-red-700">${r.name}</td>
+                  <td class="py-2 px-3 text-slate-800">第${r.lessonId}篇・${r.stageName.replace(/^第 \d 關：/, "")}</td>
+                  <td class="py-2 px-3 font-mono">${r.cleared} / ${r.goal}</td>
+                  <td class="py-2 px-3 font-mono text-amber-700">${r.maxCombo}x</td>
+                  <td class="py-2 px-3 font-mono font-black text-blue-700">${r.score} 分</td>
+                  <td class="py-2 px-3">${"⭐".repeat(r.stars)}${"☆".repeat(Math.max(0, 3 - r.stars))}</td>
+                  <td class="py-2 px-3 text-xs text-slate-500 font-mono">${r.date}</td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function clearLeaderboardWithConfirm(btn) {
+      if (!btn) return;
+      if (btn.dataset.armed !== "true") {
+        btn.dataset.armed = "true";
+        btn.textContent = "⚠️ 再點一次確定清空";
+        setTimeout(() => {
+          if (btn.dataset.armed === "true") {
+            btn.dataset.armed = "false";
+            btn.textContent = "🗑️ 清空紀錄";
+          }
+        }, 3500);
+        return;
+      }
+      btn.dataset.armed = "false";
+      btn.textContent = "🗑️ 清空紀錄";
+      challengerLeaderboard = [];
+      saveTimestampsToStorage();
+      syncGameMetaUI();
+      renderLeaderboardPanel();
+      showToast("🗑️ 排行榜已清空", "重新開始新一輪家庭或班級競賽吧！");
+    }
+
+    function exportLeaderboardReport() {
+      SoundFX.playClick();
+      const lines = [
+        "=== 臺灣台語寶可夢互動道館｜挑戰者榮譽排行榜 ===",
+        `匯出時間：${new Date().toLocaleString("zh-TW")}`,
+        ""
+      ];
+      if (challengerLeaderboard.length === 0) {
+        lines.push("目前尚無排行榜紀錄");
+      } else {
+        challengerLeaderboard.forEach((r, i) => {
+          lines.push(`第 ${i + 1} 名｜${r.name}｜第${r.lessonId}篇 ${r.stageName}｜進度 ${r.cleared}/${r.goal}｜最高連擊 ${r.maxCombo}x｜總分 ${r.score} 分｜${r.stars}星 (${r.date})`);
+        });
+      }
+      const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "台語寶可夢聽音遊戲_挑戰者榮譽排行榜.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("📄 已匯出排行榜成績單！", "可分享給老師與家人一起比拚高分！");
+    }
 
     const GameEngine = {
       stage: 1,
       running: false,
-      score: 0,
-      goal: 5,
-      lives: 3,
+      score: 0,       // 已通過題數 / 回合數
+      goal: 22,       // 本關總題數 (20 ~ 24)
+      points: 0,      // 積分（含連擊加成）
+      combo: 0,
+      maxCombo: 0,
+      lives: 5,
       showHint: true,
       currentTarget: null,
+      usedWordQueue: [],
       rafId: null,
       timerId: null,
       keys: {},
       touchDir: 0,
 
       // Canvas entities
-      player: { x: 260, y: 270, w: 64, h: 24 },
+      player: { x: 260, y: 270, w: 68, h: 24 },
       bullets: [],
       targets: [],
       bricks: [],
-      ball: { x: 260, y: 230, vx: 3.2, vy: -3.2, r: 9 },
-      bossHp: 5,
+      powerups: [],
+      balls: [],
+      bossHp: 20,
       bossX: 260,
       bossDir: 1,
+      bossProjectiles: [],
+      bossShootCooldown: 0,
 
       // DOM game states
       memoryCards: [],
       memoryFlipped: [],
       memoryLock: false,
+      memoryRound: 1,
+      memoryTotalRounds: 4,
       chainCurrentSentence: null,
       chainPool: [],
       chainSelected: [],
+      chainSentenceQueue: [],
       moleHoles: [],
+      moleTimerId: null,
       connectLeft: [],
       connectRight: [],
       connectSelLeft: -1,
       connectSelRight: -1,
+      connectRound: 1,
+      connectTotalRounds: 4,
       evolveStep: 0,
-      evolveTimeLeft: 35,
+      evolveTimeLeft: 95,
       evolveOptions: [],
+      evolveModeType: "word",
 
       renderStageTabs() {
         const tabs = document.getElementById("gameStageTabs");
         if (!tabs) return;
-        tabs.innerHTML = GAME_STAGES.map(st => `
-          <button onclick="GameEngine.startStage(${st.id})" class="poke-btn py-2 px-2.5 rounded-xl text-xs font-black text-left truncate ${this.stage === st.id ? "bg-red-600 text-white" : "bg-white text-slate-800 hover:bg-yellow-50"}">
-            ${st.name}
-          </button>
-        `).join("");
+        tabs.innerHTML = GAME_STAGES.map(st => {
+          const p = gameStageProgress[`${currentLessonId}-${st.id}`] || { bestCleared: 0, bestScore: 0, bestCombo: 0, stars: 0 };
+          const isSelected = this.stage === st.id;
+          const starStr = "⭐".repeat(p.stars || 0) + "☆".repeat(Math.max(0, 3 - (p.stars || 0)));
+          return `
+            <button onclick="GameEngine.startStage(${st.id})" class="poke-btn p-2.5 rounded-2xl text-left transition-all flex flex-col justify-between gap-1 ${isSelected ? "bg-red-600 text-white" : "bg-white text-slate-900 hover:bg-yellow-50"}">
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-xs font-black truncate">${st.id}. ${st.shortName}</span>
+                <span class="text-xs shrink-0">${starStr}</span>
+              </div>
+              <div class="flex items-center justify-between text-[11px] font-bold ${isSelected ? "text-yellow-200" : "text-slate-600"}">
+                <span>進度：${p.bestCleared || 0}/${st.goal}</span>
+                <span>連擊：${p.bestCombo || 0}x</span>
+                <span>${p.bestScore || 0}分</span>
+              </div>
+            </button>
+          `;
+        }).join("");
       },
 
       toggleHintMode(val) {
         this.showHint = !!val;
         this.updateHud();
-        if (this.stage >= 4) this.renderDomStage();
+        if (this.stage >= 4 && this.running) this.renderDomStage();
       },
 
       setTouchMove(dir) {
@@ -4701,6 +4862,31 @@
           clearInterval(this.timerId);
           this.timerId = null;
         }
+        if (this.moleTimerId) {
+          clearInterval(this.moleTimerId);
+          this.moleTimerId = null;
+        }
+      },
+
+      getDifficultyTier() {
+        const ratio = this.score / Math.max(1, this.goal);
+        if (ratio < 0.34) return { tier: 1, label: "🔥 第 1 階：暖身聽音辨識" };
+        if (ratio < 0.68) return { tier: 2, label: "⚡ 第 2 階：加速干擾陷阱" };
+        return { tier: 3, label: "👑 第 3 階：魔王極速終極試煉" };
+      },
+
+      registerCorrectHit(basePts, toastMsg) {
+        this.score++;
+        this.combo++;
+        if (this.combo > this.maxCombo) this.maxCombo = this.combo;
+        const bonus = Math.min(50, (this.combo - 1) * 5);
+        this.points += basePts + bonus;
+        addXP(8, this.combo > 1 && this.combo % 5 === 0 ? `${toastMsg}（🔥 ${this.combo} 連擊加分！）` : null);
+      },
+
+      registerMistake(loseLife = true) {
+        this.combo = 0;
+        if (loseLife) this.lives--;
       },
 
       startStage(stageId) {
@@ -4710,8 +4896,12 @@
         const cfg = GAME_STAGES.find(s => s.id === stageId) || GAME_STAGES[0];
         this.goal = cfg.goal;
         this.score = 0;
-        this.lives = 3;
+        this.points = 0;
+        this.combo = 0;
+        this.maxCombo = 0;
+        this.lives = 5;
         this.running = true;
+        this.usedWordQueue = [];
         this.renderStageTabs();
 
         const cWrap = document.getElementById("canvasGameWrapper");
@@ -4728,10 +4918,15 @@
         this.updateHud();
       },
 
-      pickRandomVocabs(count) {
-        const list = (LESSONS_DATA[currentLessonId].vocab || []).slice();
-        list.sort(() => Math.random() - 0.5);
-        return list.slice(0, Math.min(count, list.length));
+      pickNextTargetAndDistractors(totalChoices = 4) {
+        const fullList = LESSONS_DATA[currentLessonId].vocab || [];
+        if (this.usedWordQueue.length === 0) {
+          this.usedWordQueue = fullList.slice().sort(() => Math.random() - 0.5);
+        }
+        const target = this.usedWordQueue.pop();
+        const others = fullList.filter(v => v.word !== target.word).sort(() => Math.random() - 0.5);
+        const picks = [target, ...others.slice(0, Math.max(1, totalChoices - 1))];
+        return { target, picks: picks.sort(() => Math.random() - 0.5) };
       },
 
       initCanvasStage(stageId) {
@@ -4743,7 +4938,10 @@
 
         this.player.x = canvas.width * 0.5;
         this.player.y = canvas.height - 28;
+        this.player.w = 88;
         this.bullets = [];
+        this.powerups = [];
+        this.bossProjectiles = [];
 
         if (stageId === 1) {
           this.setupShooterRound(canvas);
@@ -4763,14 +4961,17 @@
       },
 
       setupShooterRound(canvas) {
-        const picks = this.pickRandomVocabs(4);
-        this.currentTarget = picks[0];
+        const { tier } = this.getDifficultyTier();
+        const choiceCnt = tier === 1 ? 3 : (tier === 2 ? 4 : 5);
+        const { target, picks } = this.pickNextTargetAndDistractors(choiceCnt);
+        this.currentTarget = target;
+        const speedMult = tier === 1 ? 1.0 : (tier === 2 ? 1.55 : 2.15);
         const spacing = canvas.width / (picks.length + 1);
         this.targets = picks.map((v, i) => ({
           vocab: v,
           x: spacing * (i + 1),
-          y: 55 + (i % 2) * 35,
-          vx: (i % 2 === 0 ? 1 : -1) * 1.1,
+          y: 52 + (i % 2) * 38,
+          vx: (i % 2 === 0 ? 1 : -1) * speedMult,
           r: 36
         }));
         this.updateHud();
@@ -4778,20 +4979,23 @@
       },
 
       setupBrickRound(canvas) {
-        const picks = this.pickRandomVocabs(4);
-        this.currentTarget = picks[0];
-        this.ball = { x: canvas.width * 0.5, y: canvas.height - 55, vx: 3.1, vy: -3.1, r: 9 };
-        this.player.w = 96;
+        const { tier } = this.getDifficultyTier();
+        const choiceCnt = tier === 1 ? 3 : 4;
+        const { target, picks } = this.pickNextTargetAndDistractors(choiceCnt);
+        this.currentTarget = target;
+        const spd = tier === 1 ? 3.0 : (tier === 2 ? 3.5 : 4.0);
+        this.balls = [{ x: canvas.width * 0.5, y: canvas.height - 55, vx: spd, vy: -spd, r: 9 }];
+        this.player.w = Math.max(76, this.player.w);
         const cols = 4;
-        const bw = Math.floor((canvas.width - 50) / cols);
+        const bw = Math.floor((canvas.width - 44) / cols);
         this.bricks = [];
         for (let r = 0; r < 2; r++) {
           for (let c = 0; c < cols; c++) {
             const isGold = r === 1;
             const v = isGold ? picks[c % picks.length] : null;
             this.bricks.push({
-              x: 25 + c * bw + 4,
-              y: 32 + r * 42,
+              x: 22 + c * bw + 4,
+              y: 28 + r * 42,
               w: bw - 8,
               h: 34,
               isGold,
@@ -4805,15 +5009,18 @@
       },
 
       setupBossRound(canvas) {
-        const picks = this.pickRandomVocabs(3);
-        this.currentTarget = picks[0];
+        const { tier } = this.getDifficultyTier();
+        const choiceCnt = tier === 1 ? 3 : 4;
+        const { target, picks } = this.pickNextTargetAndDistractors(choiceCnt);
+        this.currentTarget = target;
         this.bossX = canvas.width * 0.5;
-        const spacing = canvas.width / 4;
+        const spd = tier === 1 ? 1.25 : (tier === 2 ? 1.85 : 2.45);
+        const spacing = canvas.width / (picks.length + 1);
         this.targets = picks.map((v, i) => ({
           vocab: v,
           x: spacing * (i + 1),
-          y: 118,
-          vx: 1.4,
+          y: 122,
+          vx: spd,
           r: 36
         }));
         this.updateHud();
@@ -4823,7 +5030,7 @@
       fireAction() {
         if (!this.running || this.stage > 3) return;
         SoundFX.playShot();
-        this.bullets.push({ x: this.player.x, y: this.player.y - 16, vy: -7.5, r: 9 });
+        this.bullets.push({ x: this.player.x, y: this.player.y - 16, vy: -8.0, r: 9 });
       },
 
       updateAndDrawCanvas(canvas) {
@@ -4832,7 +5039,6 @@
         const H = canvas.height;
         ctx.clearRect(0, 0, W, H);
 
-        // 背景網格
         ctx.fillStyle = "#0f172a";
         ctx.fillRect(0, 0, W, H);
         ctx.strokeStyle = "rgba(56, 189, 248, 0.12)";
@@ -4840,30 +5046,59 @@
           ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
         }
 
-        // 玩家移動
         let dir = this.touchDir;
         if (this.keys["ArrowLeft"] || this.keys["a"]) dir = -1;
         if (this.keys["ArrowRight"] || this.keys["d"]) dir = 1;
-        this.player.x = Math.max(44, Math.min(W - 44, this.player.x + dir * 6));
+        this.player.x = Math.max(46, Math.min(W - 46, this.player.x + dir * 6.5));
+
+        const { tier } = this.getDifficultyTier();
+        const blindWave = tier === 3 && (this.score % 2 === 1);
 
         if (this.stage === 1 || this.stage === 3) {
           if (this.stage === 3) {
-            this.bossX += this.bossDir * 1.8;
+            this.bossX += this.bossDir * (1.5 + tier * 0.6);
             if (this.bossX < 70 || this.bossX > W - 70) this.bossDir *= -1;
-            ctx.font = "42px sans-serif";
+            ctx.font = "40px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(currentLessonId === "01" ? "🦠" : "🐉", this.bossX, 54);
+            ctx.fillText(currentLessonId === "01" ? "🦠" : "🐉", this.bossX, 50);
             ctx.fillStyle = "#fde047";
             ctx.font = "bold 12px sans-serif";
-            ctx.fillText(`${currentLessonId === "01" ? "感冒大魔王" : "苦瓜巨龍王"} HP: ${this.bossHp}`, this.bossX, 74);
+            ctx.fillText(`${currentLessonId === "01" ? "感冒大魔王" : "苦瓜巨龍王"} 護盾: ${this.bossHp} / ${this.goal}`, this.bossX, 70);
+
+            // 魔王投擲干擾彈（第 2、3 階啟動）
+            if (tier >= 2) {
+              this.bossShootCooldown++;
+              const interval = tier === 2 ? 135 : 95;
+              if (this.bossShootCooldown >= interval) {
+                this.bossShootCooldown = 0;
+                this.bossProjectiles.push({ x: this.bossX, y: 72, vy: 2.3 + tier * 0.5, r: 9 });
+              }
+            }
+            for (let pIdx = this.bossProjectiles.length - 1; pIdx >= 0; pIdx--) {
+              const bp = this.bossProjectiles[pIdx];
+              bp.y += bp.vy;
+              ctx.fillStyle = "#a855f7";
+              ctx.beginPath(); ctx.arc(bp.x, bp.y, bp.r, 0, Math.PI * 2); ctx.fill();
+              ctx.strokeStyle = "#fde047";
+              ctx.stroke();
+
+              if (Math.abs(bp.x - this.player.x) < 32 && Math.abs(bp.y - this.player.y) < 16) {
+                this.bossProjectiles.splice(pIdx, 1);
+                SoundFX.playWrong();
+                this.registerMistake(true);
+                this.updateHud();
+                if (this.lives <= 0) { this.failStage(); return; }
+              } else if (bp.y > H + 15) {
+                this.bossProjectiles.splice(pIdx, 1);
+              }
+            }
           }
 
-          // 移動目標氣泡
           this.targets.forEach(t => {
             t.x += t.vx;
-            if (t.x < t.r + 12 || t.x > W - t.r - 12) t.vx *= -1;
+            if (t.x < 48 || t.x > W - 48) t.vx *= -1;
             ctx.fillStyle = "#1e293b";
-            ctx.strokeStyle = "#facc15";
+            ctx.strokeStyle = blindWave ? "#f43f5e" : "#facc15";
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.roundRect(t.x - 46, t.y - 22, 92, 44, 14);
@@ -4871,17 +5106,17 @@
             ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "900 14px sans-serif";
+            ctx.font = "900 13px sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(t.vocab.word, t.x, this.showHint ? t.y - 2 : t.y + 5);
-            if (this.showHint) {
+            const showZy = this.showHint && !blindWave;
+            ctx.fillText(t.vocab.word, t.x, showZy ? t.y - 2 : t.y + 5);
+            if (showZy) {
               ctx.fillStyle = "#fde047";
               ctx.font = "bold 10px sans-serif";
               ctx.fillText(t.vocab.zhuyin, t.x, t.y + 14);
             }
           });
 
-          // 子彈更新與碰撞
           for (let i = this.bullets.length - 1; i >= 0; i--) {
             const b = this.bullets[i];
             b.y += b.vy;
@@ -4889,7 +5124,6 @@
               this.bullets.splice(i, 1);
               continue;
             }
-            // 繪製精靈球子彈
             ctx.fillStyle = "#ef4444";
             ctx.beginPath(); ctx.arc(b.x, b.y, b.r, Math.PI, 0); ctx.fill();
             ctx.fillStyle = "#ffffff";
@@ -4901,12 +5135,11 @@
                 this.bullets.splice(i, 1);
                 if (this.currentTarget && t.vocab.word === this.currentTarget.word) {
                   SoundFX.playCatch();
-                  this.score++;
+                  this.registerCorrectHit(100, `收服「${t.vocab.word}」！`);
                   if (this.stage === 3) {
                     this.bossHp--;
                     SoundFX.playLightning();
                   }
-                  addXP(12, `收服「${t.vocab.word}」！`);
                   this.updateHud();
                   if (this.score >= this.goal) {
                     this.completeStage();
@@ -4916,7 +5149,7 @@
                   else this.setupBossRound(canvas);
                 } else {
                   SoundFX.playWrong();
-                  this.lives--;
+                  this.registerMistake(true);
                   this.updateHud();
                   if (this.lives <= 0) {
                     this.failStage();
@@ -4928,7 +5161,6 @@
             }
           }
 
-          // 繪製底部砲台
           ctx.fillStyle = "#ef4444";
           ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 2.5;
@@ -4937,64 +5169,81 @@
           ctx.fill();
           ctx.stroke();
         } else if (this.stage === 2) {
-          // 敲磚球移動
-          const ball = this.ball;
-          ball.x += ball.vx;
-          ball.y += ball.vy;
-          if (ball.x < ball.r || ball.x > W - ball.r) ball.vx *= -1;
-          if (ball.y < ball.r) ball.vy *= -1;
+          // 多球支援
+          for (let bIdx = this.balls.length - 1; bIdx >= 0; bIdx--) {
+            const ball = this.balls[bIdx];
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+            if (ball.x < ball.r || ball.x > W - ball.r) ball.vx *= -1;
+            if (ball.y < ball.r) ball.vy *= -1;
 
-          // 反彈板碰撞
-          if (ball.vy > 0 && ball.y + ball.r >= this.player.y - 10 && Math.abs(ball.x - this.player.x) <= this.player.w * 0.55) {
-            ball.vy = -Math.abs(ball.vy);
-            SoundFX.playHit();
-          }
-
-          // 掉出底部
-          if (ball.y > H + 15) {
-            SoundFX.playWrong();
-            this.lives--;
-            this.updateHud();
-            if (this.lives <= 0) {
-              this.failStage();
-              return;
+            if (ball.vy > 0 && ball.y + ball.r >= this.player.y - 10 && Math.abs(ball.x - this.player.x) <= this.player.w * 0.55) {
+              ball.vy = -Math.abs(ball.vy);
+              const offset = (ball.x - this.player.x) / (this.player.w * 0.5);
+              ball.vx = Math.max(-4.8, Math.min(4.8, ball.vx + offset * 1.2));
+              SoundFX.playHit();
             }
-            ball.x = W * 0.5;
-            ball.y = H - 55;
-            ball.vy = -3.1;
-          }
 
-          // 磚塊繪製與碰撞
-          this.bricks.forEach(bk => {
-            if (!bk.alive) return;
-            if (ball.x + ball.r > bk.x && ball.x - ball.r < bk.x + bk.w && ball.y + ball.r > bk.y && ball.y - ball.r < bk.y + bk.h) {
-              ball.vy *= -1;
-              if (bk.isGold && bk.vocab) {
-                if (this.currentTarget && bk.vocab.word === this.currentTarget.word) {
-                  bk.alive = false;
-                  SoundFX.playLightning();
-                  this.score++;
-                  addXP(15, `擊破黃金語詞磚「${bk.vocab.word}」！`);
-                  this.updateHud();
-                  if (this.score >= this.goal) {
-                    this.completeStage();
-                    return;
-                  }
-                  const remain = this.bricks.filter(x => x.alive && x.isGold);
-                  if (remain.length > 0) {
-                    this.currentTarget = remain[0].vocab;
+            if (ball.y > H + 15) {
+              if (this.balls.length > 1) {
+                this.balls.splice(bIdx, 1);
+                continue;
+              }
+              SoundFX.playWrong();
+              this.registerMistake(true);
+              this.updateHud();
+              if (this.lives <= 0) {
+                this.failStage();
+                return;
+              }
+              ball.x = W * 0.5;
+              ball.y = H - 55;
+              ball.vy = -3.2;
+            }
+
+            this.bricks.forEach(bk => {
+              if (!bk.alive) return;
+              if (ball.x + ball.r > bk.x && ball.x - ball.r < bk.x + bk.w && ball.y + ball.r > bk.y && ball.y - ball.r < bk.y + bk.h) {
+                ball.vy *= -1;
+                if (bk.isGold && bk.vocab) {
+                  if (this.currentTarget && bk.vocab.word === this.currentTarget.word) {
+                    bk.alive = false;
+                    SoundFX.playLightning();
+                    this.registerCorrectHit(110, `擊破黃金語詞磚「${bk.vocab.word}」！`);
                     this.updateHud();
-                    playCurrentGameTargetAudio(1.0);
+                    if (this.score >= this.goal) {
+                      this.completeStage();
+                      return;
+                    }
+                    const remain = this.bricks.filter(x => x.alive && x.isGold);
+                    if (remain.length > 0) {
+                      this.currentTarget = remain[0].vocab;
+                      this.updateHud();
+                      playCurrentGameTargetAudio(1.0);
+                    } else {
+                      this.setupBrickRound(canvas);
+                    }
+                  } else {
+                    SoundFX.playWrong();
                   }
                 } else {
-                  SoundFX.playWrong();
+                  bk.alive = false;
+                  SoundFX.playHit();
+                  if (Math.random() < 0.35) {
+                    const types = ["wide", "multi", "life"];
+                    const pType = types[Math.floor(Math.random() * types.length)];
+                    this.powerups.push({ x: bk.x + bk.w * 0.5, y: bk.y + 16, vy: 2.2, type: pType });
+                  }
                 }
-              } else {
-                bk.alive = false;
-                SoundFX.playHit();
               }
-            }
+            });
 
+            ctx.fillStyle = "#fde047";
+            ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+          }
+
+          // 繪製磚塊
+          this.bricks.forEach(bk => {
             if (!bk.alive) return;
             ctx.fillStyle = bk.isGold ? "#facc15" : "#38bdf8";
             ctx.strokeStyle = "#0f172a";
@@ -5012,9 +5261,35 @@
             }
           });
 
-          // 繪製能量球與反彈板
-          ctx.fillStyle = "#fde047";
-          ctx.beginPath(); ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2); ctx.fill();
+          // 掉落道具更新與接取
+          for (let i = this.powerups.length - 1; i >= 0; i--) {
+            const pw = this.powerups[i];
+            pw.y += pw.vy;
+            ctx.fillStyle = pw.type === "wide" ? "#22c55e" : (pw.type === "multi" ? "#a855f7" : "#f43f5e");
+            ctx.beginPath();
+            ctx.roundRect(pw.x - 16, pw.y - 10, 32, 20, 8);
+            ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "900 11px sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(pw.type === "wide" ? "⚡寬" : (pw.type === "multi" ? "🔮雙" : "❤️命"), pw.x, pw.y + 4);
+
+            if (Math.abs(pw.x - this.player.x) < this.player.w * 0.55 && Math.abs(pw.y - this.player.y) < 18) {
+              this.powerups.splice(i, 1);
+              SoundFX.playPowerup();
+              if (pw.type === "wide") {
+                this.player.w = Math.min(150, this.player.w + 26);
+              } else if (pw.type === "multi" && this.balls.length < 3) {
+                const ref = this.balls[0];
+                this.balls.push({ x: ref.x, y: ref.y, vx: -ref.vx, vy: ref.vy, r: 9 });
+              } else if (pw.type === "life") {
+                this.lives = Math.min(6, this.lives + 1);
+                this.updateHud();
+              }
+            } else if (pw.y > H + 20) {
+              this.powerups.splice(i, 1);
+            }
+          }
 
           ctx.fillStyle = "#facc15";
           ctx.strokeStyle = "#ffffff";
@@ -5028,31 +5303,21 @@
 
       initDomStage(stageId) {
         if (stageId === 4) {
-          const picks = this.pickRandomVocabs(4);
-          const cards = [];
-          picks.forEach((v, i) => {
-            cards.push({ pairId: i, kind: "sound", vocab: v, flipped: false, matched: false });
-            cards.push({ pairId: i, kind: "word", vocab: v, flipped: false, matched: false });
-          });
-          cards.sort(() => Math.random() - 0.5);
-          this.memoryCards = cards;
-          this.memoryFlipped = [];
-          this.memoryLock = false;
-          this.currentTarget = picks[0];
+          this.memoryRound = 1;
+          this.memoryTotalRounds = 4; // 4輪 × 5組 = 20組配對
+          this.setupMemoryRound();
         } else if (stageId === 5) {
+          this.chainSentenceQueue = [];
           this.setupTrainRound();
         } else if (stageId === 6) {
           this.setupMoleRound();
         } else if (stageId === 7) {
-          const picks = this.pickRandomVocabs(4);
-          this.connectLeft = picks.map(v => ({ vocab: v, matched: false }));
-          this.connectRight = picks.slice().sort(() => Math.random() - 0.5).map(v => ({ vocab: v, matched: false }));
-          this.connectSelLeft = -1;
-          this.connectSelRight = -1;
-          this.currentTarget = picks[0];
+          this.connectRound = 1;
+          this.connectTotalRounds = 4; // 4輪 × 5組 = 20題連線
+          this.setupConnectRound();
         } else if (stageId === 8) {
           this.evolveStep = 0;
-          this.evolveTimeLeft = 40;
+          this.evolveTimeLeft = 110;
           this.setupEvolveRound();
           this.timerId = setInterval(() => {
             if (!this.running) return;
@@ -5067,31 +5332,91 @@
         this.renderDomStage();
       },
 
+      setupMemoryRound() {
+        const picks = [];
+        for (let i = 0; i < 5; i++) {
+          const { target } = this.pickNextTargetAndDistractors(1);
+          if (!picks.some(p => p.word === target.word)) picks.push(target);
+          else {
+            const fallback = (LESSONS_DATA[currentLessonId].vocab || []).find(v => !picks.some(p => p.word === v.word));
+            if (fallback) picks.push(fallback);
+          }
+        }
+        const cards = [];
+        picks.forEach((v, i) => {
+          cards.push({ pairId: i, kind: "sound", vocab: v, flipped: false, matched: false });
+          cards.push({ pairId: i, kind: "word", vocab: v, flipped: false, matched: false });
+        });
+        cards.sort(() => Math.random() - 0.5);
+        this.memoryCards = cards;
+        this.memoryFlipped = [];
+        this.memoryLock = false;
+        this.currentTarget = picks[0];
+        this.updateHud();
+      },
+
+      setupConnectRound() {
+        const picks = [];
+        for (let i = 0; i < 5; i++) {
+          const { target } = this.pickNextTargetAndDistractors(1);
+          if (!picks.some(p => p.word === target.word)) picks.push(target);
+          else {
+            const fallback = (LESSONS_DATA[currentLessonId].vocab || []).find(v => !picks.some(p => p.word === v.word));
+            if (fallback) picks.push(fallback);
+          }
+        }
+        this.connectLeft = picks.map(v => ({ vocab: v, matched: false }));
+        this.connectRight = picks.slice().sort(() => Math.random() - 0.5).map(v => ({ vocab: v, matched: false }));
+        this.connectSelLeft = -1;
+        this.connectSelRight = -1;
+        this.currentTarget = picks[0];
+        this.updateHud();
+      },
+
       setupTrainRound() {
         const sents = (SENTENCES_DATA[currentLessonId] || []).filter(s => s.para > 0);
-        const chosen = sents[Math.floor(Math.random() * sents.length)] || sents[0];
+        if (this.chainSentenceQueue.length === 0) {
+          this.chainSentenceQueue = sents.slice().sort(() => Math.random() - 0.5);
+        }
+        const chosen = this.chainSentenceQueue.pop() || sents[0];
         this.chainCurrentSentence = chosen;
         const parts = chosen.plain.split(/(?<=[，。！？、])/).map(x => x.trim()).filter(Boolean);
-        const cars = parts.length >= 2 ? parts : [chosen.plain.slice(0, Math.ceil(chosen.plain.length / 2)), chosen.plain.slice(Math.ceil(chosen.plain.length / 2))];
+        let cars = parts.length >= 2 ? parts : [chosen.plain.slice(0, Math.ceil(chosen.plain.length / 2)), chosen.plain.slice(Math.ceil(chosen.plain.length / 2))];
         this.chainSelected = [];
-        this.chainPool = cars.map((text, idx) => ({ idx, text })).sort(() => Math.random() - 0.5);
+        const pool = cars.map((text, idx) => ({ idx, text, isDistractor: false }));
+
+        // 第 11 題起加入干擾車廂提升挑戰性
+        if (this.score >= 10) {
+          const otherSent = sents.find(s => s.id !== chosen.id) || sents[0];
+          const dPart = (otherSent.plain.split(/[，。！？、]/).map(x => x.trim()).filter(Boolean))[0] || "毋過真好食";
+          pool.push({ idx: -1, text: dPart, isDistractor: true });
+        }
+        this.chainPool = pool.sort(() => Math.random() - 0.5);
         this.updateHud();
         playCurrentGameTargetAudio(1.0);
         return true;
       },
 
       setupMoleRound() {
-        const picks = this.pickRandomVocabs(6);
-        this.currentTarget = picks[0];
-        this.moleHoles = picks.sort(() => Math.random() - 0.5);
+        const { target, picks } = this.pickNextTargetAndDistractors(9);
+        this.currentTarget = target;
+        this.moleHoles = picks.slice(0, 9);
+        while (this.moleHoles.length < 9) {
+          const extra = (LESSONS_DATA[currentLessonId].vocab || [])[this.moleHoles.length % 10];
+          this.moleHoles.push(extra);
+        }
+        this.moleHoles.sort(() => Math.random() - 0.5);
         this.updateHud();
         playCurrentGameTargetAudio(1.0);
       },
 
       setupEvolveRound() {
-        const picks = this.pickRandomVocabs(4);
-        this.currentTarget = picks[0];
-        this.evolveOptions = picks.sort(() => Math.random() - 0.5);
+        const { target, picks } = this.pickNextTargetAndDistractors(4);
+        this.currentTarget = target;
+        this.evolveOptions = picks;
+        if (this.score < 8) this.evolveModeType = "word";
+        else if (this.score < 16) this.evolveModeType = "meaning";
+        else this.evolveModeType = "blindWord";
         this.updateHud();
         playCurrentGameTargetAudio(1.0);
       },
@@ -5103,25 +5428,28 @@
         if (this.stage === 4) {
           wrap.innerHTML = `
             <div class="space-y-3">
-              <div class="text-xs sm:text-sm font-black text-indigo-900">🃏 玩法說明：翻開「🔊 語音精靈球卡」聽台語發音，找出對應的「🎴 詞彙卡」完成配對！</div>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm font-black text-indigo-900">🃏 玩法說明：翻開「🔊 語音精靈球卡」聽發音，找出對應「🎴 詞彙卡」（共 4 輪 × 5 組＝20 組）！</span>
+                <span class="bg-purple-700 text-white text-xs font-black px-3 py-1 rounded-full">第 ${this.memoryRound} / ${this.memoryTotalRounds} 輪</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                 ${this.memoryCards.map((c, idx) => {
                   if (c.matched) {
-                    return `<div class="p-4 rounded-2xl bg-emerald-100 border-2 border-emerald-500 text-center font-black text-emerald-900">✅ ${c.vocab.word}</div>`;
+                    return `<div class="p-3.5 rounded-2xl bg-emerald-100 border-2 border-emerald-500 text-center font-black text-xs sm:text-sm text-emerald-900 flex flex-col justify-center min-h-[84px]">✅ ${c.vocab.word}</div>`;
                   }
                   if (!c.flipped) {
                     return `
-                      <button onclick="flipMemoryCard(${idx})" class="poke-btn p-5 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-white font-black text-center">
-                        <div class="text-2xl">⚪</div>
-                        <div class="text-xs mt-1">點我翻牌</div>
+                      <button onclick="flipMemoryCard(${idx})" class="poke-btn p-4 rounded-2xl bg-gradient-to-br from-red-500 to-rose-600 text-white font-black text-center min-h-[84px]">
+                        <div class="text-xl">⚪</div>
+                        <div class="text-xs mt-0.5">點我翻牌</div>
                       </button>
                     `;
                   }
                   return `
-                    <div class="p-3 rounded-2xl bg-yellow-50 border-2 border-slate-900 text-center space-y-1">
+                    <div class="p-2.5 rounded-2xl bg-yellow-50 border-2 border-slate-900 text-center flex flex-col justify-center min-h-[84px] space-y-1">
                       ${c.kind === "sound"
-                        ? `<div class="text-2xl">🔊</div><button onclick="replayMemorySound(${idx})" class="text-xs font-black bg-yellow-400 px-2.5 py-1 rounded-lg border border-slate-800">重聽發音</button>`
-                        : `<div class="font-black text-base text-slate-900">${c.vocab.word}</div>${this.showHint ? `<div class="text-xs font-bold text-red-600">${c.vocab.zhuyin}</div>` : ""}`
+                        ? `<div class="text-xl">🔊</div><button onclick="replayMemorySound(${idx})" class="text-[11px] font-black bg-yellow-400 px-2 py-0.5 rounded-lg border border-slate-800 mx-auto">重聽發音</button>`
+                        : `<div class="font-black text-sm sm:text-base text-slate-900">${c.vocab.word}</div>${this.showHint ? `<div class="text-[11px] font-bold text-red-600">${c.vocab.zhuyin}</div>` : ""}`
                       }
                     </div>
                   `;
@@ -5130,14 +5458,15 @@
             </div>
           `;
         } else if (this.stage === 5) {
+          const requiredCount = this.chainPool.filter(c => !c.isDistractor).length + this.chainSelected.length;
           wrap.innerHTML = `
             <div class="space-y-4">
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="text-xs sm:text-sm font-black text-indigo-900">🚂 玩法說明：點擊上方「🔊 重聽題目」聽完整句台語原音，依序點選下方車廂接龍發車！</span>
+                <span class="text-xs sm:text-sm font-black text-indigo-900">🚂 玩法說明：聽完整句台語原音，依序點選下方車廂接龍發車！${this.score >= 10 ? "（⚠️ 注意：本題含有干擾車廂陷阱喔！）" : ""}</span>
                 <button onclick="playCurrentGameTargetAudio(1.0)" class="poke-btn bg-yellow-400 text-slate-950 text-xs font-black px-3 py-1.5 rounded-xl">🔊 再聽一次整句</button>
               </div>
-              <div class="bg-slate-900 text-white p-3.5 rounded-2xl min-h-[56px] flex flex-wrap items-center gap-2">
-                <span class="text-yellow-300 font-black text-sm">🚂 火車頭：</span>
+              <div class="bg-slate-900 text-white p-3.5 rounded-2xl min-h-[60px] flex flex-wrap items-center gap-2">
+                <span class="text-yellow-300 font-black text-sm">🚂 火車頭 (${this.chainSelected.length}/${requiredCount})：</span>
                 ${this.chainSelected.map(c => `<span class="bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm px-3 py-1 rounded-xl">${c.text}</span>`).join("")}
               </div>
               <div class="flex flex-wrap gap-2">
@@ -5150,15 +5479,19 @@
             </div>
           `;
         } else if (this.stage === 6) {
+          const { tier } = this.getDifficultyTier();
           wrap.innerHTML = `
             <div class="space-y-3">
-              <div class="text-xs sm:text-sm font-black text-indigo-900">🔨 玩法說明：仔細聽老師唸出哪一個台語詞彙，眼明手快敲中草叢洞穴裡對應的台語地鼠！</div>
-              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm font-black text-indigo-900">🔨 玩法說明：仔細聽老師唸出哪一個台語詞彙，眼明手快敲中 3×3 草叢洞穴裡對應的台語地鼠！</span>
+                <span class="text-xs font-black bg-emerald-100 text-emerald-900 px-2.5 py-0.5 rounded-full">第 ${this.score + 1} / ${this.goal} 隻</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2.5 sm:gap-3">
                 ${this.moleHoles.map(v => `
-                  <button onclick="whackMole('${v.word}')" class="poke-btn p-4 rounded-2xl bg-gradient-to-b from-emerald-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200 text-center space-y-1">
-                    <div class="text-2xl">🐹</div>
-                    <div class="font-black text-base text-slate-900">${v.word}</div>
-                    ${this.showHint ? `<div class="text-xs font-bold text-red-600">${v.zhuyin}</div>` : ""}
+                  <button onclick="whackMole('${v.word}')" class="poke-btn p-3 sm:p-4 rounded-2xl bg-gradient-to-b from-emerald-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200 text-center space-y-1">
+                    <div class="text-xl sm:text-2xl">🐹</div>
+                    <div class="font-black text-sm sm:text-base text-slate-900">${v.word}</div>
+                    ${this.showHint && tier < 3 ? `<div class="text-[11px] font-bold text-red-600">${v.zhuyin}</div>` : ""}
                   </button>
                 `).join("")}
               </div>
@@ -5167,23 +5500,26 @@
         } else if (this.stage === 7) {
           wrap.innerHTML = `
             <div class="space-y-3">
-              <div class="text-xs sm:text-sm font-black text-indigo-900">🌉 玩法說明：先點左排「🔊 台語語音球」聽發音，再點右排配對正確的「國語白話意思」！</div>
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm font-black text-indigo-900">🌉 玩法說明：先點左排「🔊 台語語音球」聽發音，再點右排配對「國語白話意思」（共 4 輪 × 5 組＝20 題）！</span>
+                <span class="bg-blue-700 text-white text-xs font-black px-3 py-1 rounded-full">第 ${this.connectRound} / ${this.connectTotalRounds} 輪</span>
+              </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div class="space-y-2">
                   <div class="text-xs font-black text-slate-500">左排：台語原音詞彙</div>
                   ${this.connectLeft.map((it, idx) => `
                     <div class="flex items-center gap-1.5">
-                      <button onclick="selectConnectLeft(${idx})" ${it.matched ? "disabled" : ""} class="flex-1 poke-btn py-2.5 px-3 rounded-xl font-black text-sm text-left ${it.matched ? "bg-emerald-100 text-emerald-800 opacity-60" : (this.connectSelLeft === idx ? "bg-yellow-300 text-slate-950" : "bg-white text-slate-900")}">
+                      <button onclick="selectConnectLeft(${idx})" ${it.matched ? "disabled" : ""} class="flex-1 poke-btn py-2 px-3 rounded-xl font-black text-xs sm:text-sm text-left ${it.matched ? "bg-emerald-100 text-emerald-800 opacity-60" : (this.connectSelLeft === idx ? "bg-yellow-300 text-slate-950" : "bg-white text-slate-900")}">
                         ${it.matched ? "✅" : "🔊"} ${it.vocab.word} ${this.showHint ? `<span class="text-xs text-red-600">(${it.vocab.zhuyin})</span>` : ""}
                       </button>
-                      <button onclick="playConnectSlowByIdx(${idx})" class="poke-btn bg-sky-200 px-2.5 py-2.5 rounded-xl text-xs font-black" title="慢速重聽">🐢</button>
+                      <button onclick="playConnectSlowByIdx(${idx})" class="poke-btn bg-sky-200 px-2.5 py-2 rounded-xl text-xs font-black" title="慢速重聽">🐢</button>
                     </div>
                   `).join("")}
                 </div>
                 <div class="space-y-2">
                   <div class="text-xs font-black text-slate-500">右排：白話意思</div>
                   ${this.connectRight.map((it, idx) => `
-                    <button onclick="selectConnectRight(${idx})" ${it.matched ? "disabled" : ""} class="w-full poke-btn py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm text-left ${it.matched ? "bg-emerald-100 text-emerald-800 opacity-60" : (this.connectSelRight === idx ? "bg-sky-300 text-slate-950" : "bg-slate-50 text-slate-800")}">
+                    <button onclick="selectConnectRight(${idx})" ${it.matched ? "disabled" : ""} class="w-full poke-btn py-2 px-3 rounded-xl font-bold text-xs text-left ${it.matched ? "bg-emerald-100 text-emerald-800 opacity-60" : (this.connectSelRight === idx ? "bg-sky-300 text-slate-950" : "bg-slate-50 text-slate-800")}">
                       ${it.matched ? "✅" : "🎯"} ${it.vocab.meaning}
                     </button>
                   `).join("")}
@@ -5193,27 +5529,37 @@
           `;
         } else if (this.stage === 8) {
           const stagesEvo = [
-            { icon: "🥚", title: "神秘寶可夢蛋" },
-            { icon: "🐭", title: "皮丘" },
-            { icon: "⚡", title: "皮卡丘" },
-            { icon: "🔥", title: "超極巨化雷丘" }
+            { icon: "🥚", title: "神秘寶可夢蛋 (0-4題)" },
+            { icon: "🐭", title: "皮丘 (5-9題)" },
+            { icon: "⚡", title: "皮卡丘 (10-14題)" },
+            { icon: "🔥", title: "雷丘 (15-19題)" },
+            { icon: "👑", title: "超極巨化雷丘 (20-24題)" }
           ];
-          const curEvo = stagesEvo[Math.min(3, Math.floor(this.evolveStep / 2))];
+          const curEvo = stagesEvo[Math.min(4, Math.floor(this.evolveStep / 5))];
+          const modeTitle = this.evolveModeType === "word"
+            ? "【第 1 階段：聽音辨字】選出聽到的台語詞彙！"
+            : (this.evolveModeType === "meaning"
+              ? "【第 2 階段：聽音辨義】選出該台語詞彙的白話意思！"
+              : "【第 3 階段：盲聽極速試煉】無注音提示，選出正確台語詞彙！");
+
           wrap.innerHTML = `
             <div class="space-y-4 text-center">
-              <div class="flex items-center justify-between text-xs sm:text-sm font-black">
-                <span class="text-purple-800">⚡ 限時閃電進化考驗（連對集氣進化！）</span>
-                <span id="evolveTimerText" class="bg-red-600 text-white px-3 py-1 rounded-full font-mono">${this.evolveTimeLeft}s</span>
+              <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm font-black">
+                <span class="text-purple-800">⚡ 24 題閃電進化大考驗（連對集氣一路進化！）</span>
+                <span id="evolveTimerText" class="bg-red-600 text-white px-3.5 py-1 rounded-full font-mono">${this.evolveTimeLeft}s</span>
               </div>
-              <div class="py-3">
+              <div class="py-2">
                 <div class="text-6xl evolve-pulse inline-block">${curEvo.icon}</div>
                 <div class="font-black text-base text-slate-900 mt-1">目前形態：${curEvo.title}（進化能量 ${this.evolveStep} / ${this.goal}）</div>
+                <div class="text-xs font-black text-blue-700 mt-1">${modeTitle}</div>
               </div>
-              <div class="grid grid-cols-2 gap-2.5 max-w-xl mx-auto">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-2xl mx-auto">
                 ${this.evolveOptions.map(opt => `
-                  <button onclick="answerEvolve('${opt.word}')" class="poke-btn bg-yellow-100 hover:bg-yellow-300 p-3 rounded-2xl font-black text-slate-900">
-                    <div class="text-base">${opt.word}</div>
-                    ${this.showHint ? `<div class="text-xs text-red-600">${opt.zhuyin}</div>` : ""}
+                  <button onclick="answerEvolve('${opt.word}')" class="poke-btn bg-yellow-100 hover:bg-yellow-300 p-3.5 rounded-2xl font-black text-slate-900">
+                    ${this.evolveModeType === "meaning"
+                      ? `<div class="text-xs sm:text-sm">${opt.meaning}</div>`
+                      : `<div class="text-base sm:text-lg">${opt.word}</div>${this.showHint && this.evolveModeType === "word" ? `<div class="text-xs text-red-600">${opt.zhuyin}</div>` : ""}`
+                    }
                   </button>
                 `).join("")}
               </div>
@@ -5226,15 +5572,22 @@
         const stInfo = GAME_STAGES.find(s => s.id === this.stage);
         const titleEl = document.getElementById("gameStageTitle");
         const scoreEl = document.getElementById("gameScoreHud");
+        const ptsEl = document.getElementById("gamePointsHud");
+        const comboEl = document.getElementById("gameComboHud");
         const promptEl = document.getElementById("gameTargetPrompt");
         const livesEl = document.getElementById("gameLivesHud");
+        const diffEl = document.getElementById("gameDifficultyBadge");
 
         if (titleEl && stInfo) titleEl.textContent = stInfo.name;
         if (scoreEl) scoreEl.textContent = `進度：${this.score} / ${this.goal}`;
+        if (ptsEl) ptsEl.textContent = `得分：${this.points} 分`;
+        if (comboEl) comboEl.textContent = `連擊：${this.combo}x`;
         if (livesEl) livesEl.textContent = "❤️".repeat(Math.max(0, this.lives));
+        if (diffEl) diffEl.textContent = this.getDifficultyTier().label;
+
         if (promptEl) {
           if (this.stage === 5 && this.chainCurrentSentence) {
-            promptEl.textContent = "🎧 聽完整句台語原音，依序把句子接起來！";
+            promptEl.textContent = "🎧 聽完整句台語原音，依序把車廂接起來！";
           } else if (this.currentTarget) {
             promptEl.textContent = this.showHint
               ? `🎯 聽音找詞：${this.currentTarget.zhuyin}`
@@ -5247,15 +5600,17 @@
         this.stopLoops();
         SoundFX.playLevelClear();
         earnedBadges["game"] = true;
-        addXP(40, `恭喜通過「${GAME_STAGES.find(s => s.id === this.stage)?.name}」！解鎖遊戲大師徽章！`);
-        saveTimestampsToStorage();
+        const stars = calcStageStars(this.score, this.goal);
+        recordGameLeaderboardEntry(this.stage, this.score, this.goal, this.maxCombo, this.points, stars);
+        addXP(60, `恭喜制霸「${GAME_STAGES.find(s => s.id === this.stage)?.name}」(${this.score}/${this.goal})！獲得 ${stars} 顆星！`);
+
         const domWrap = document.getElementById("domGameWrapper");
         if (this.stage >= 4 && domWrap) {
           domWrap.innerHTML = `
             <div class="text-center py-8 space-y-3">
-              <div class="text-5xl">🏆</div>
-              <h3 class="text-xl font-black text-emerald-700">太厲害了！關卡挑戰大成功！</h3>
-              <p class="text-sm text-slate-600 font-bold">你可以繼續挑戰其他關卡，把這篇的台語詞彙練得滾瓜爛熟！</p>
+              <div class="text-5xl">🏆 ${"⭐".repeat(stars)}</div>
+              <h3 class="text-xl font-black text-emerald-700">太厲害了！完成全部 ${this.goal} 題挑戰！</h3>
+              <p class="text-sm text-slate-700 font-bold">挑戰者 <strong>${challengerName}</strong> 獲得 <strong>${this.points} 分</strong>（最高連擊 ${this.maxCombo}x），已自動登錄至榮譽排行榜！</p>
               <button onclick="GameEngine.startStage(GameEngine.stage < 8 ? GameEngine.stage + 1 : 1)" class="poke-btn bg-yellow-400 text-slate-950 font-black px-5 py-2.5 rounded-2xl">
                 ▶️ 挑戰下一關
               </button>
@@ -5267,7 +5622,11 @@
       failStage() {
         this.stopLoops();
         SoundFX.playWrong();
-        showToast("💪 差一點點就過關了！", "點擊「▶️ 開始 / 重來」再挑戰一次吧！");
+        const stars = calcStageStars(this.score, this.goal);
+        if (this.score > 0) {
+          recordGameLeaderboardEntry(this.stage, this.score, this.goal, this.maxCombo, this.points, stars);
+        }
+        showToast(`💪 本次完成 ${this.score} / ${this.goal} 題（${this.points} 分）！`, "戰績已自動保存並登錄排行榜，按「▶️ 開始 / 重來」再創紀錄！");
       }
     };
 
@@ -5317,23 +5676,28 @@
           if (c1.pairId === c2.pairId && c1.kind !== c2.kind) {
             c1.matched = true;
             c2.matched = true;
-            GameEngine.score++;
             SoundFX.playCatch();
-            addXP(10, `翻牌配對成功：「${c1.vocab.word}」！`);
+            GameEngine.registerCorrectHit(100, `翻牌配對成功：「${c1.vocab.word}」！`);
           } else {
             c1.flipped = false;
             c2.flipped = false;
             SoundFX.playWrong();
+            GameEngine.registerMistake(false);
           }
           GameEngine.memoryFlipped = [];
           GameEngine.memoryLock = false;
           GameEngine.updateHud();
+
           if (GameEngine.score >= GameEngine.goal) {
             GameEngine.completeStage();
+          } else if (GameEngine.memoryCards.every(card => card.matched)) {
+            GameEngine.memoryRound++;
+            GameEngine.setupMemoryRound();
+            GameEngine.renderDomStage();
           } else {
             GameEngine.renderDomStage();
           }
-        }, 850);
+        }, 780);
       }
     }
 
@@ -5341,26 +5705,49 @@
       if (!GameEngine.running) return;
       const item = GameEngine.chainPool[poolIdx];
       if (!item) return;
+      if (item.isDistractor) {
+        SoundFX.playWrong();
+        GameEngine.registerMistake(true);
+        GameEngine.updateHud();
+        if (GameEngine.lives <= 0) {
+          GameEngine.failStage();
+          return;
+        }
+        showToast("⚠️ 這是干擾車廂陷阱喔！", "再聽一次整句發音，找出原本句子裡的片段！");
+        return;
+      }
+
       const expectedIdx = GameEngine.chainSelected.length;
       if (item.idx === expectedIdx) {
         GameEngine.chainSelected.push(item);
         GameEngine.chainPool.splice(poolIdx, 1);
         SoundFX.playTrainStep(expectedIdx);
-        if (GameEngine.chainPool.length === 0) {
+        const remainingValid = GameEngine.chainPool.filter(c => !c.isDistractor);
+        if (remainingValid.length === 0) {
           SoundFX.playTrainWhistle();
-          GameEngine.score++;
-          addXP(15, "火車成功接龍發車！");
+          GameEngine.registerCorrectHit(120, "火車成功接龍發車！");
           GameEngine.updateHud();
           if (GameEngine.score >= GameEngine.goal) {
             GameEngine.completeStage();
             return;
           }
-          setTimeout(() => GameEngine.setupTrainRound() || GameEngine.renderDomStage(), 700);
+          setTimeout(() => {
+            if (GameEngine.running) {
+              GameEngine.setupTrainRound();
+              GameEngine.renderDomStage();
+            }
+          }, 650);
           return;
         }
         GameEngine.renderDomStage();
       } else {
         SoundFX.playWrong();
+        GameEngine.registerMistake(true);
+        GameEngine.updateHud();
+        if (GameEngine.lives <= 0) {
+          GameEngine.failStage();
+          return;
+        }
         showToast("🚂 順序不對喔！", "再聽一次整句發音，找找看下一節車廂是哪一段！");
       }
     }
@@ -5369,8 +5756,7 @@
       if (!GameEngine.running) return;
       if (GameEngine.currentTarget && word === GameEngine.currentTarget.word) {
         SoundFX.playWhack();
-        GameEngine.score++;
-        addXP(10, `敲中正確地鼠「${word}」！`);
+        GameEngine.registerCorrectHit(100, `敲中正確地鼠「${word}」！`);
         GameEngine.updateHud();
         if (GameEngine.score >= GameEngine.goal) {
           GameEngine.completeStage();
@@ -5380,7 +5766,7 @@
         GameEngine.renderDomStage();
       } else {
         SoundFX.playWrong();
-        GameEngine.lives--;
+        GameEngine.registerMistake(true);
         GameEngine.updateHud();
         if (GameEngine.lives <= 0) GameEngine.failStage();
       }
@@ -5422,17 +5808,26 @@
       if (l.vocab.word === r.vocab.word) {
         l.matched = true;
         r.matched = true;
-        GameEngine.score++;
         SoundFX.playCatch();
-        addXP(10, `連線配對成功：「${l.vocab.word}」！`);
+        GameEngine.registerCorrectHit(100, `連線配對成功：「${l.vocab.word}」！`);
       } else {
         SoundFX.playWrong();
+        GameEngine.registerMistake(true);
       }
       GameEngine.connectSelLeft = -1;
       GameEngine.connectSelRight = -1;
       GameEngine.updateHud();
+
+      if (GameEngine.lives <= 0) {
+        GameEngine.failStage();
+        return;
+      }
       if (GameEngine.score >= GameEngine.goal) {
         GameEngine.completeStage();
+      } else if (GameEngine.connectLeft.every(x => x.matched)) {
+        GameEngine.connectRound++;
+        GameEngine.setupConnectRound();
+        GameEngine.renderDomStage();
       } else {
         GameEngine.renderDomStage();
       }
@@ -5442,9 +5837,8 @@
       if (!GameEngine.running) return;
       if (GameEngine.currentTarget && word === GameEngine.currentTarget.word) {
         GameEngine.evolveStep++;
-        GameEngine.score++;
         SoundFX.playEvolve();
-        addXP(12, `答對「${word}」！進化能量上升！`);
+        GameEngine.registerCorrectHit(110, `答對「${word}」！進化能量上升！`);
         GameEngine.updateHud();
         if (GameEngine.score >= GameEngine.goal) {
           GameEngine.completeStage();
@@ -5454,7 +5848,9 @@
         GameEngine.renderDomStage();
       } else {
         SoundFX.playWrong();
-        GameEngine.evolveTimeLeft = Math.max(1, GameEngine.evolveTimeLeft - 3);
+        GameEngine.registerMistake(false);
+        GameEngine.evolveTimeLeft = Math.max(1, GameEngine.evolveTimeLeft - 4);
+        GameEngine.updateHud();
       }
     }
 
@@ -5543,7 +5939,7 @@
     }
 
     // ==========================================
-    // 14. XP 經驗值、等級進化、匯出與初始化
+    // 14. XP 經驗值、等級進化與初始化
     // ==========================================
     function addXP(points, msg) {
       xp += points;
@@ -5610,6 +6006,8 @@
     function renderAll() {
       renderStory();
       renderVocab();
+      syncGameMetaUI();
+      GameEngine.renderStageTabs();
       if (currentMode === "coach") renderCoachWeekBody();
       if (currentMode === "quiz") renderQuiz();
       updateTrainerHUD();
